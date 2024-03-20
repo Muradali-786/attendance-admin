@@ -61,7 +61,7 @@ class _SideMenuState extends State<SideMenu> {
   @override
   Widget build(BuildContext context) {
     return AdminScaffold(
-      backgroundColor: AppColor.kWhite,
+      backgroundColor: AppColor.kBgColor,
       appBar: AppBar(
         backgroundColor: AppColor.kPrimaryColor,
         iconTheme: IconThemeData(

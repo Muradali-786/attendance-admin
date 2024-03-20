@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:attendance_admin/constant/app_style/app_colors.dart';
+import 'package:attendance_admin/text_theme.dart';
 import 'package:attendance_admin/view/side_menu/side_menu.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
@@ -30,8 +32,10 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'CS Admin Panel',
       theme: ThemeData(
-        primarySwatch: Colors.cyan,
+        textTheme: textTheme,
+        canvasColor: AppColor.kBlueColor,
       ),
+
       home: const SideMenu(),
       builder: EasyLoading.init(),
     );

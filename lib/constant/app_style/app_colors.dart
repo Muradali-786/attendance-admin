@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 
 
@@ -10,7 +11,7 @@ class AppColor {
   static const Color kWhite = Color(0xffffffff);
   static const Color kWhiteF7 = Color(0xfff7f7f7);
   static const Color kWhiteFA = Color(0xffFAFAFA);
-  static const Color kWhiteEF = Color(0xffEFEFEF);
+    static const Color kWhite70 = Colors.white70;
 
   static const Color kBgColor = Color(0xfffafafa);
 
@@ -45,6 +46,12 @@ class AppColor {
   static const Color kTextBlackColor = Color(0xff000000);
   static const Color kTextGreyColor = Color(0xff646464);//class
   static const Color kTextGrey54Color = Color(0xff767676);//class nika
+
+
+  static const Color kBlueColor = Color(0xFF2697FF);
+  static const Color kDarkSecColor = Color(0xFF2A2D3E);
+  static const Color kbg2Color = Color(0xFF212332);
+
 
 
   /* End of Colors */
