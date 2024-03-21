@@ -23,7 +23,7 @@ class GraphChartsStatistic extends StatelessWidget {
             "Students Details",
             style: TextStyle(
               fontSize: 18,
-              color: Colors.white70,
+              color: Colors.white,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -36,19 +36,19 @@ class GraphChartsStatistic extends StatelessWidget {
             numOfFiles: 400,
           ),
           StorageInfoCard(
-            svgSrc: "assets/icons/media.svg",
+            svgSrc: "assets/icons/unknown.svg",
             title: "Total Absent",
             amountOfFiles: "88",
             numOfFiles: 400,
           ),
           StorageInfoCard(
-            svgSrc: "assets/icons/folder.svg",
+            svgSrc: "assets/icons/excel_file.svg",
             title: "Total Leaves",
             amountOfFiles: "15",
             numOfFiles: 400,
           ),
           StorageInfoCard(
-            svgSrc: "assets/icons/unknown.svg",
+            svgSrc: "assets/icons/drop_box.svg",
             title: "Attendance Percentage",
             amountOfFiles: "88%",
             numOfFiles: 400
@@ -77,7 +77,7 @@ class StorageInfoCard extends StatelessWidget {
       margin: EdgeInsets.only(top: 16),
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
-        border: Border.all(width: 2, color: AppColor.kPrimaryColor.withOpacity(0.15)),
+        border: Border.all(width: 2, color: AppColor.kPrimaryColor),
         borderRadius: const BorderRadius.all(
           Radius.circular(16),
         ),
@@ -98,7 +98,7 @@ class StorageInfoCard extends StatelessWidget {
                   Text(
                     title,
                     maxLines: 1,
-                    style: TextStyle(color:   Colors.white70,),
+                    style: TextStyle(color:   Colors.white,),
                     overflow: TextOverflow.ellipsis,
                   ),
                   Text(
@@ -106,13 +106,13 @@ class StorageInfoCard extends StatelessWidget {
                     style: Theme.of(context)
                         .textTheme
                         .bodySmall!
-                        .copyWith(color: Colors.white70),
+                        .copyWith(color: Colors.white),
                   ),
                 ],
               ),
             ),
           ),
-          Text(amountOfFiles,style: TextStyle(  color: Colors.white70,),)
+          Text(amountOfFiles,style: TextStyle(  color: Colors.white,),)
         ],
       ),
     );

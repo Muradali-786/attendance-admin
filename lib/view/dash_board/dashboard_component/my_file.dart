@@ -5,8 +5,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-import '../../model/dep_states_model.dart';
-import '../../responsive.dart';
+import '../../../model/dep_states_model.dart';
+import '../../../responsive.dart';
 
 class MyFiles extends StatelessWidget {
   const MyFiles({super.key});
@@ -165,7 +165,7 @@ class FileInfoCard extends StatelessWidget {
                       info.color ?? Colors.black, BlendMode.srcIn),
                 ),
               ),
-              Icon(Icons.more_vert, color: Colors.white54)
+              Icon(Icons.more_vert, color: Colors.white)
             ],
           ),
           Text(

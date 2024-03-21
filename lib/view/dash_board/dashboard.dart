@@ -1,11 +1,12 @@
 import 'package:attendance_admin/constant/app_style/app_colors.dart';
-import 'package:attendance_admin/view/dash_board/teacher_info.dart';
-import 'package:attendance_admin/view/dash_board/my_file.dart';
 
 import 'package:flutter/material.dart';
 
 import '../../responsive.dart';
-import 'graph_charts_statistic.dart';
+import 'dashboard_component/graph_charts_statistic.dart';
+import 'dashboard_component/my_file.dart';
+import 'dashboard_component/teacher_info.dart';
+
 
 class DashboardScreen extends StatelessWidget {
   static const String id = '\dashboard';
