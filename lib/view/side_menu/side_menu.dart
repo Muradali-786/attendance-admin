@@ -86,6 +86,7 @@ class _SideMenuState extends State<SideMenu> {
          iconColor: AppColor.kPrimaryColor,
         textStyle: TextStyle(color: AppColor.kPrimaryColor),
         activeTextStyle:TextStyle(color: AppColor.kPrimaryColor),
+
         items: const [
           AdminMenuItem(
             title: 'Dashboard',

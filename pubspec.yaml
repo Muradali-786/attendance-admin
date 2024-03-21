@@ -42,7 +42,10 @@ dependencies:
   fl_chart: ^0.66.2
   firebase_auth:
   cloud_firestore:
+  provider: ^6.1.2
   flutter_svg: ^2.0.10+1
+  fluttertoast: ^8.2.4
+
 
 
 dev_dependencies:

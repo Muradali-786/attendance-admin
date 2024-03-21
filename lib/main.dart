@@ -2,10 +2,16 @@ import 'dart:io';
 import 'package:attendance_admin/constant/app_style/app_colors.dart';
 import 'package:attendance_admin/text_theme.dart';
 import 'package:attendance_admin/view/side_menu/side_menu.dart';
+import 'package:attendance_admin/view_model/add_students/students_controller.dart';
+import 'package:attendance_admin/view_model/attendance/attendance_controller.dart';
+import 'package:attendance_admin/view_model/class_input/class_controller.dart';
+import 'package:attendance_admin/view_model/login/login_controller.dart';
+import 'package:attendance_admin/view_model/sign_up/sign_up_controller.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,16 +34,36 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'CS Admin Panel',
-      theme: ThemeData(
-        textTheme: textTheme,
-        canvasColor: AppColor.kBlueColor,
-      ),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<SignUpController>(
+          create: (_) => SignUpController(),
+        ),
+        ChangeNotifierProvider<LoginController>(
+          create: (_) => LoginController(),
+        ),
+        ChangeNotifierProvider<ClassController>(
+          create: (_) => ClassController(),
+        ),
+        ChangeNotifierProvider<AttendanceController>(
+          create: (_) => AttendanceController(),
+        ),
+        ChangeNotifierProvider<StudentController>(
+          create: (_) => StudentController(),
+        ),
 
-      home: const SideMenu(),
-      builder: EasyLoading.init(),
+
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'CS Admin Panel',
+        theme: ThemeData(
+          textTheme: textTheme,
+          canvasColor: AppColor.kBlueColor,
+        ),
+        home: const SideMenu(),
+        builder: EasyLoading.init(),
+      ),
     );
   }
 }

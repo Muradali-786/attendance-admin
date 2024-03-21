@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fl_chart/fl_chart.dart';
 
-class StorageDetails extends StatelessWidget {
-  const StorageDetails({
+class GraphChartsStatistic extends StatelessWidget {
+  const GraphChartsStatistic({
     Key? key,
   }) : super(key: key);
 

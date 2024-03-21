@@ -1,10 +1,11 @@
 import 'package:attendance_admin/constant/app_style/app_colors.dart';
-import 'package:attendance_admin/view/dash_board/dummy.dart';
-import 'package:attendance_admin/view/dash_board/dummy_2.dart';
+import 'package:attendance_admin/view/dash_board/teacher_info.dart';
+import 'package:attendance_admin/view/dash_board/my_file.dart';
+
 import 'package:flutter/material.dart';
 
 import '../../responsive.dart';
-import 'dummy3.dart';
+import 'graph_charts_statistic.dart';
 
 class DashboardScreen extends StatelessWidget {
   static const String id = '\dashboard';
@@ -42,10 +43,10 @@ class DashboardScreen extends StatelessWidget {
                     children: [
                       MyFiles(),
                       SizedBox(height: 16),
-                      RecentFiles(),
+                      TeacherInformation(),
                       if (Responsive.isMobile(context))
                         SizedBox(height: 16),
-                      if (Responsive.isMobile(context)) StorageDetails(),
+                      if (Responsive.isMobile(context)) GraphChartsStatistic(),
                     ],
                   ),
                 ),
@@ -55,7 +56,7 @@ class DashboardScreen extends StatelessWidget {
                 if (!Responsive.isMobile(context))
                   Expanded(
                     flex: 2,
-                    child: StorageDetails(),
+                    child: GraphChartsStatistic(),
                   ),
               ],
             )
@@ -112,3 +113,5 @@ class _ProfileManagementScreenState extends State<ProfileManagementScreen> {
     );
   }
 }
+
+
