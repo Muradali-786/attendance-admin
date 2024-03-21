@@ -19,7 +19,7 @@ class _RecentFilesState extends State<RecentFiles> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: const BoxDecoration(
-        color: AppColor.kPrimaryColor,
+        color: AppColor.kSecondaryColor,
         borderRadius:  BorderRadius.all(Radius.circular(10)),
       ),
       child: Column(
@@ -71,7 +71,10 @@ class _RecentFilesState extends State<RecentFiles> {
                       DataColumn(
                         label: Text(
                           "Last Active",
+
                           style: TextStyle(color: Colors.white),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                     ],

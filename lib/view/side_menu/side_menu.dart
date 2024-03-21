@@ -42,6 +42,12 @@ class _SideMenuState extends State<SideMenu> {
         });
 
         break;
+      case DashboardScreen.id:
+        setState(() {
+          _selectedScreen = DashboardScreen();
+        });
+
+        break;
       case SettingScreen.id:
         setState(() {
           _selectedScreen = SettingScreen();
@@ -77,8 +83,15 @@ class _SideMenuState extends State<SideMenu> {
         ),
       ),
       sideBar: SideBar(
-
+         iconColor: AppColor.kPrimaryColor,
+        textStyle: TextStyle(color: AppColor.kPrimaryColor),
+        activeTextStyle:TextStyle(color: AppColor.kPrimaryColor),
         items: const [
+          AdminMenuItem(
+            title: 'Dashboard',
+            icon: Icons.person,
+            route: DashboardScreen.id,
+          ),
           AdminMenuItem(
             title: 'Teachers',
             icon: Icons.person,
@@ -132,7 +145,7 @@ class _SideMenuState extends State<SideMenu> {
         footer: Container(
           height: 50,
           width: double.infinity,
-          color: AppColor.kPrimaryColor,
+          color: AppColor.kSecondaryColor,
           child: const Center(
             child: Text(
               'CS Attendance Management',

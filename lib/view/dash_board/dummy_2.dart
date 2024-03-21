@@ -78,7 +78,7 @@ class FileInfoCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColor.kPrimaryColor,
+        color: AppColor.kSubmarine,
         borderRadius: const BorderRadius.all(Radius.circular(10)),
       ),
       child: Column(

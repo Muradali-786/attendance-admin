@@ -1,6 +1,10 @@
+import 'package:attendance_admin/constant/app_style/app_colors.dart';
 import 'package:attendance_admin/view/dash_board/dummy.dart';
 import 'package:attendance_admin/view/dash_board/dummy_2.dart';
 import 'package:flutter/material.dart';
+
+import '../../responsive.dart';
+import 'dummy3.dart';
 
 class DashboardScreen extends StatelessWidget {
   static const String id = '\dashboard';
@@ -17,18 +21,44 @@ class DashboardScreen extends StatelessWidget {
           children: [
             Container(
               alignment: Alignment.topLeft,
-              padding: const EdgeInsets.only(top: 5),
-              child: const Text(
+         
+              child:  Text(
                 'Dashboard',
                 style: TextStyle(
-                  fontWeight: FontWeight.w700,
                   fontSize: 36,
-                ),
+                  fontWeight: FontWeight.bold,
+                  color: AppColor.kPrimaryColor
+                )
               ),
             ),
-            MyFiles(),
-            SizedBox(height: 16),
-            RecentFiles()
+
+            // SizedBox(height: 16),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  flex: 5,
+                  child: Column(
+                    children: [
+                      MyFiles(),
+                      SizedBox(height: 16),
+                      RecentFiles(),
+                      if (Responsive.isMobile(context))
+                        SizedBox(height: 16),
+                      if (Responsive.isMobile(context)) StorageDetails(),
+                    ],
+                  ),
+                ),
+                if (!Responsive.isMobile(context))
+                  SizedBox(width: 16),
+                // On Mobile means if the screen is less than 850 we don't want to show it
+                if (!Responsive.isMobile(context))
+                  Expanded(
+                    flex: 2,
+                    child: StorageDetails(),
+                  ),
+              ],
+            )
           ],
         ),
       ),
