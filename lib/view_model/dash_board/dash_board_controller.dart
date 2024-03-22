@@ -11,13 +11,13 @@ class DashBoardController {
     try {
       await _firestore.collection(ADMIN).doc(id).set({
         'totalStudent': '400',
-        'totalClasses': '6',
-        'totalTeacher': '90',
-        'percentage': '88%',
+        'totalClasses': '12',
+        'totalTeacher': '06',
+        'percentage': '87',
         'depCount':'01',
-        'presentStudents': '09',
+        'presentStudents': '250',
         'absentStudents': '50',
-        'leavesStudents': '12',
+        'leavesStudents': '100',
       });
       Utils.toastMessage('Data Refresh');
     } catch (e) {

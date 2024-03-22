@@ -90,7 +90,7 @@ class _SideMenuState extends State<SideMenu> {
         items: const [
           AdminMenuItem(
             title: 'Dashboard',
-            icon: Icons.person,
+            icon: Icons.dashboard_outlined,
             route: DashboardScreen.id,
           ),
           AdminMenuItem(

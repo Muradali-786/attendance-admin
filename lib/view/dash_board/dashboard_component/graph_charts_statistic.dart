@@ -72,24 +72,30 @@ class GraphChartsStatistic extends StatelessWidget {
           StudentInfoCard(
             svgSrc: "assets/icons/Documents.svg",
             title: "Total Presents",
+            kcolor:  Color(0xFF007EE5),
             stdStates: data['presentStudents'].toString(),
             outOftotal: data['totalStudent'].toString(),
           ),
           StudentInfoCard(
-            svgSrc: "assets/icons/excel_file.svg",
+            svgSrc: "assets/icons/Documents.svg",
             title: "Total Leaves",
+              kcolor: Color(0xFF26E5FF),
+
             stdStates: data['leavesStudents'].toString(),
             outOftotal: data['totalStudent'].toString(),
           ),
           StudentInfoCard(
             svgSrc: "assets/icons/unknown.svg",
             title: "Total Absent",
+            kcolor: Colors.red,
             stdStates: data['absentStudents'].toString(),
             outOftotal: data['totalStudent'].toString(),
           ),
+
           StudentInfoCard(
             svgSrc: "assets/icons/drop_box.svg",
             title: "Summary",
+            kcolor: AppColor.kPrimaryColor,
             stdStates: "${data['percentage'].toString()}%",
             outOftotal: data['totalStudent'].toString(),
           ),
@@ -106,10 +112,12 @@ class StudentInfoCard extends StatelessWidget {
     required this.svgSrc,
     required this.stdStates,
     required this.outOftotal,
+    required this.kcolor
   }) : super(key: key);
 
   final String title, svgSrc, stdStates;
   final String outOftotal;
+  final Color kcolor;
 
   @override
   Widget build(BuildContext context) {
@@ -127,7 +135,7 @@ class StudentInfoCard extends StatelessWidget {
           SizedBox(
             height: 20,
             width: 20,
-            child: SvgPicture.asset(svgSrc),
+            child: SvgPicture.asset(svgSrc,colorFilter: ColorFilter.mode(kcolor, BlendMode.srcIn),),
           ),
           Expanded(
             child: Padding(

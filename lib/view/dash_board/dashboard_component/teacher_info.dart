@@ -120,14 +120,11 @@ DataRow TeacherInfoFake(TeacherInfoDummy  e) {
       DataCell(
         Row(
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              child: Text(
-                e.title!,
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
-                style: TextStyle(color: AppColor.kWhite),
-              ),
+            Text(
+              e.title!,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+              style: TextStyle(color: AppColor.kWhite),
             ),
           ],
         ),
