@@ -25,7 +25,7 @@ List departmentStatesList = [
     svgSrc: "assets/icons/drop_box.svg",
 
 
-    color: Colors.cyan,
+    color:AppColor.kPrimaryColor,
 
   ),
   DepartmentStates(

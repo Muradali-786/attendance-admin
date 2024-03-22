@@ -52,7 +52,6 @@ class MyApp extends StatelessWidget {
           create: (_) => StudentController(),
         ),
 
-
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

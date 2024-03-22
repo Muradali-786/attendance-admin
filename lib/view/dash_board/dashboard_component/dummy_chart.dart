@@ -1,44 +1,16 @@
+
 import 'package:attendance_admin/constant/app_style/app_colors.dart';
-import 'package:attendance_admin/view/dash_board/dashboard_component/dummy_chart.dart';
-import 'package:attendance_admin/view_model/dash_board/dash_board_controller.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+
+
+import 'package:flutter_svg/svg.dart';
 
 import 'chart.dart';
 
-class GraphChart extends StatefulWidget {
-  const GraphChart({super.key});
-
-  @override
-  State<GraphChart> createState() => _GraphChartState();
-}
-
-class _GraphChartState extends State<GraphChart> {
-  final DashBoardController _boardController = DashBoardController();
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      child: StreamBuilder<DocumentSnapshot>(
-        stream: _boardController.getDepartmentStats(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return DummyChart();
-          } else {
-            dynamic data = snapshot.data!.data();
-            return GraphChartsStatistic(
-              data: data,
-            );
-          }
-        },
-      ),
-    );
-  }
-}
-
-class GraphChartsStatistic extends StatelessWidget {
+class DummyChart extends StatelessWidget {
   dynamic data;
-  GraphChartsStatistic({Key? key, this.data = ''}) : super(key: key);
+  DummyChart ({Key? key, this.data = ''}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -63,35 +35,35 @@ class GraphChartsStatistic extends StatelessWidget {
           ),
           SizedBox(height: 16),
           Chart(
-            totalStudents: int.parse(data['totalStudent']),
-            presentStudents: int.parse(data['presentStudents']),
-            absentStudents: int.parse(data['absentStudents']),
-            leaveStudents: int.parse(data['leavesStudents']),
-            percentage: int.parse(data['percentage']),
+            totalStudents: 100,
+            presentStudents: 100,
+            absentStudents: 100,
+            leaveStudents: 100,
+            percentage:100,
           ),
           StudentInfoCard(
             svgSrc: "assets/icons/Documents.svg",
             title: "Total Presents",
-            stdStates: data['presentStudents'].toString(),
-            outOftotal: data['totalStudent'].toString(),
+            stdStates: '##',
+            outOftotal: '##',
           ),
           StudentInfoCard(
             svgSrc: "assets/icons/excel_file.svg",
             title: "Total Leaves",
-            stdStates: data['leavesStudents'].toString(),
-            outOftotal: data['totalStudent'].toString(),
+            stdStates: '##',
+            outOftotal: '##',
           ),
           StudentInfoCard(
             svgSrc: "assets/icons/unknown.svg",
             title: "Total Absent",
-            stdStates: data['absentStudents'].toString(),
-            outOftotal: data['totalStudent'].toString(),
+            stdStates: '##',
+            outOftotal: '##',
           ),
           StudentInfoCard(
             svgSrc: "assets/icons/drop_box.svg",
             title: "Summary",
-            stdStates: "${data['percentage'].toString()}%",
-            outOftotal: data['totalStudent'].toString(),
+            stdStates: '##',
+            outOftotal: '##',
           ),
         ],
       ),
@@ -144,7 +116,7 @@ class StudentInfoCard extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                   ),
                   Text(
-                    "Out of $outOftotal Students",
+                    "Out of ## Students",
                     style: Theme.of(context)
                         .textTheme
                         .bodySmall!
@@ -165,5 +137,6 @@ class StudentInfoCard extends StatelessWidget {
     );
   }
 }
+
 
 

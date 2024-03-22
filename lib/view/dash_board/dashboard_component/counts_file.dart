@@ -8,8 +8,8 @@ import 'package:flutter_svg/svg.dart';
 import '../../../model/dep_states_model.dart';
 import '../../../responsive.dart';
 
-class MyFiles extends StatelessWidget {
-  const MyFiles({super.key});
+class CountFiles extends StatelessWidget {
+  const CountFiles({super.key});
 
   @override
   Widget build(BuildContext context) {

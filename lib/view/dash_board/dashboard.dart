@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../responsive.dart';
 import 'dashboard_component/graph_charts_statistic.dart';
-import 'dashboard_component/my_file.dart';
+import 'dashboard_component/counts_file.dart';
 import 'dashboard_component/teacher_info.dart';
 
 
@@ -42,12 +42,12 @@ class DashboardScreen extends StatelessWidget {
                   flex: 5,
                   child: Column(
                     children: [
-                      MyFiles(),
+                      CountFiles(),
                       SizedBox(height: 16),
                       TeacherInformation(),
                       if (Responsive.isMobile(context))
                         SizedBox(height: 16),
-                      if (Responsive.isMobile(context)) GraphChartsStatistic(),
+                      if (Responsive.isMobile(context)) GraphChart(),
                     ],
                   ),
                 ),
@@ -57,7 +57,7 @@ class DashboardScreen extends StatelessWidget {
                 if (!Responsive.isMobile(context))
                   Expanded(
                     flex: 2,
-                    child: GraphChartsStatistic(),
+                    child: GraphChart(),
                   ),
               ],
             )
