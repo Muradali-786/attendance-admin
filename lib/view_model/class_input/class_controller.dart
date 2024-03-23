@@ -5,13 +5,9 @@ import '../../constant/app_style/app_styles.dart';
 import '../../model/class_model.dart';
 import '../../utils/utils.dart';
 
-
-
-
 class ClassController with ChangeNotifier {
   final fireStore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
-
 
   bool _loading = false;
   get loading => _loading;
@@ -34,7 +30,6 @@ class ClassController with ChangeNotifier {
           .then(
         (value) {
           setLoading(false);
-
         },
       );
 
@@ -48,7 +43,6 @@ class ClassController with ChangeNotifier {
       setLoading(false);
     }
   }
-
 
   Future<void> updateClassData(ClassInputModel classInputModel) async {
     setLoading(true);
@@ -66,15 +60,9 @@ class ClassController with ChangeNotifier {
     }
   }
 
-  Stream<QuerySnapshot> getClassData() {
-    String teacherId = _auth.currentUser!.uid;
-    return fireStore
-        .collection(CLASS)
-        .where('teacherId', isEqualTo: teacherId)
-        .snapshots();
+  Stream<QuerySnapshot> getAllClassesData() {
+    return fireStore.collection(CLASS).snapshots();
   }
-
-
 
   Future<void> deleteClass(String classId) async {
     try {
