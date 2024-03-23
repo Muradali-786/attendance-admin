@@ -5,8 +5,7 @@ import 'package:attendance_admin/view/side_menu/side_menu.dart';
 import 'package:attendance_admin/view_model/add_students/students_controller.dart';
 import 'package:attendance_admin/view_model/attendance/attendance_controller.dart';
 import 'package:attendance_admin/view_model/class_input/class_controller.dart';
-import 'package:attendance_admin/view_model/login/login_controller.dart';
-import 'package:attendance_admin/view_model/sign_up/sign_up_controller.dart';
+import 'package:attendance_admin/view_model/teacher/teacher_controller.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -36,11 +35,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<SignUpController>(
-          create: (_) => SignUpController(),
-        ),
-        ChangeNotifierProvider<LoginController>(
-          create: (_) => LoginController(),
+        ChangeNotifierProvider<TeacherController>(
+          create: (_) => TeacherController(),
         ),
         ChangeNotifierProvider<ClassController>(
           create: (_) => ClassController(),

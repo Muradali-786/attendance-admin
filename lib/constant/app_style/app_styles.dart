@@ -23,8 +23,8 @@ class AppStyles{
   }
 }
 
-
-
+// main admin
+const ADMIN = 'Admin';
 // firebase COLLECTION NAMES
  const String TEACHER = 'Teachers';
 const String CLASS = 'Classes';

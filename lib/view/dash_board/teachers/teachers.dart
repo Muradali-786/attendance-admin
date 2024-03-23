@@ -1,6 +1,8 @@
 import 'package:attendance_admin/constant/app_style/app_colors.dart';
 import 'package:attendance_admin/constant/app_style/app_styles.dart';
 import 'package:attendance_admin/model/sign_up_model.dart';
+import 'package:attendance_admin/view/dash_board/classes/classes.dart';
+import 'package:attendance_admin/view/dash_board/teachers/register_teacher/register_teacher_dialog.dart';
 import 'package:attendance_admin/view_model/teacher/teacher_controller.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -26,16 +28,24 @@ class _TeachersScreenState extends State<TeachersScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Column(
         children: [
-          Container(
-            alignment: Alignment.topLeft,
-            child: Text('Faculty Information',
-                style: TextStyle(
-                    fontSize: 36,
-                    fontWeight: FontWeight.bold,
-                    color: AppColor.kPrimaryColor)),
-          ),
+         Row(
+           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+           children: [
+             Container(
+               alignment: Alignment.topLeft,
+               child: Text('Faculty Information',
+                   style: TextStyle(
+                       fontSize: 36,
+                       fontWeight: FontWeight.bold,
+                       color: AppColor.kPrimaryColor)),
+             ),
+             IconButton(onPressed: (){
+               registerNewTeacherDialog(context);
+             }, icon: Icon(Icons.add_circle,color: AppColor.kSecondaryColor,)),
+           ],
+         ),
           StreamBuilder<QuerySnapshot>(
-            stream: _teacherController.getTeacherData(),
+            stream: _teacherController.streamTeacherData(),
             builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return ShimmerLoadingEffect();

@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/widgets.dart';
 
@@ -165,6 +164,14 @@ class StudentController with ChangeNotifier {
       Utils.toastMessage('Error getting Student');
       return [];
     }
+  }
+
+  Future<QuerySnapshot> getAllStudentCountOfOneClass(String classId) {
+    return _fireStore
+        .collection(CLASS)
+        .doc(classId)
+        .collection(STUDENT)
+        .get();
   }
 
   Future<void> addListOfStudent(

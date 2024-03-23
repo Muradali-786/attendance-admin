@@ -38,6 +38,7 @@ class DialogInputTextField extends StatelessWidget {
       validator: onValidator,
       keyboardType: keyBoardType,
       cursorColor: cursorColor,
+     cursorHeight: 5,
       enabled: enable,
       onTapOutside: (event) => FocusScope.of(context).unfocus(),
       style:TextStyle(fontSize: 28,color: AppColor.kPrimaryTextColor),

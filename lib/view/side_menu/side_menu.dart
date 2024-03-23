@@ -1,4 +1,5 @@
 import 'package:attendance_admin/constant/app_style/app_colors.dart';
+import 'package:attendance_admin/view/dash_board/attendance/attendance.dart';
 import 'package:attendance_admin/view/dash_board/classes/classes.dart';
 import 'package:attendance_admin/view/dash_board/setting/setting.dart';
 import 'package:attendance_admin/view/dash_board/students/student.dart';
@@ -110,6 +111,12 @@ class _SideMenuState extends State<SideMenu> {
             title: 'Students',
             icon: Icons.perm_contact_calendar_outlined,
             route: StudentScreen.id,
+          ),
+
+          AdminMenuItem(
+            title: 'Attendance',
+            icon: Icons.perm_contact_calendar_outlined,
+            route: AttendanceScreen.id,
           ),
 
           AdminMenuItem(

@@ -1,5 +1,6 @@
 import 'package:attendance_admin/model/class_model.dart';
 import 'package:attendance_admin/utils/component/dialoge_boxes/delete_confirmations.dart';
+import 'package:attendance_admin/view/dash_board/classes/register/register_new_class_dialog.dart';
 import 'package:attendance_admin/view/dash_board/classes/update/updae_class_dialog.dart';
 import 'package:attendance_admin/view_model/class_input/class_controller.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -26,16 +27,25 @@ class _ClassesScreenState extends State<ClassesScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
         children: [
-          Container(
-            alignment: Alignment.topLeft,
-            child: Text('Course Information',
-                style: TextStyle(
-                    fontSize: 36,
-                    fontWeight: FontWeight.bold,
-                    color: AppColor.kPrimaryColor)),
+
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                alignment: Alignment.topLeft,
+                child: Text('Course Information',
+                    style: TextStyle(
+                        fontSize: 36,
+                        fontWeight: FontWeight.bold,
+                        color: AppColor.kPrimaryColor)),
+              ),
+              IconButton(onPressed: (){
+                registerNewClassDialog(context);
+              }, icon: Icon(Icons.add_circle,color: AppColor.kSecondaryColor,)),
+            ],
           ),
           StreamBuilder<QuerySnapshot>(
-            stream: _controller.getAllClassesData(),
+            stream: _controller.streamAllClassesData(),
             builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return ShimmerLoadingEffect();
@@ -86,7 +96,7 @@ class _ClassesScreenState extends State<ClassesScreen> {
                                     children: [
                                       Text(snap[index].subjectName.toString()),
                                       Text(
-                                          "${snap[index].batchName}-(${snap[index].departmentName})"),
+                                          "${snap[index].departmentName}-(${snap[index].batchName})"),
                                     ],
                                   ),
                                 ),

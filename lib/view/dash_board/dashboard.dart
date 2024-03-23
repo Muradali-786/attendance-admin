@@ -1,5 +1,8 @@
+import 'dart:js_interop';
+
 import 'package:attendance_admin/constant/app_style/app_colors.dart';
 import 'package:attendance_admin/view_model/dash_board/dash_board_controller.dart';
+import 'package:attendance_admin/view_model/teacher/teacher_controller.dart';
 
 import 'package:flutter/material.dart';
 
@@ -17,6 +20,8 @@ class DashboardScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    TeacherController().deleteTeacherData();
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
