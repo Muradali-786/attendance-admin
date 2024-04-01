@@ -174,6 +174,8 @@ class StudentController with ChangeNotifier {
         .get();
   }
 
+
+
   Future<void> addListOfStudent(
     String classId,
     List stdRollNoList,
@@ -284,6 +286,14 @@ class StudentController with ChangeNotifier {
         .doc(classId)
         .collection(STUDENT)
         .snapshots();
+  }
+
+  Future<QuerySnapshot> getAllStudentDataByClassId(String classId) {
+    return _fireStore
+        .collection(CLASS)
+        .doc(classId)
+        .collection(STUDENT)
+        .get();
   }
 
   Future<dynamic> getStudentDataToExport(String classId) {

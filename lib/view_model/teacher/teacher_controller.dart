@@ -31,8 +31,6 @@ class TeacherController with ChangeNotifier{
 
   Future<void> deleteTeacherData() async{
     dynamic data =await _auth.userChanges().toList();
-    print('chek thi skhan');
-    print(data);
 
 
   }

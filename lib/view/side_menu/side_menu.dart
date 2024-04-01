@@ -62,6 +62,12 @@ class _SideMenuState extends State<SideMenu> {
         });
 
         break;
+      case AttendanceScreen.id:
+        setState(() {
+          _selectedScreen = AttendanceScreen();
+        });
+
+        break;
     }
   }
 
@@ -76,7 +82,7 @@ class _SideMenuState extends State<SideMenu> {
         ),
 
         title: const Text(
-          'CS Department Attendance Control Panel',
+          'Attendance Manager Admin Control Panel',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             color: Colors.white,

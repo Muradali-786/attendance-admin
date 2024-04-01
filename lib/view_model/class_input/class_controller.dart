@@ -63,11 +63,17 @@ class ClassController with ChangeNotifier {
   Stream<QuerySnapshot> streamAllClassesData() {
     return fireStore.collection(CLASS).snapshots();
   }
+
   Future<QuerySnapshot> getAllClassesData() {
     return fireStore.collection(CLASS).get();
   }
 
-
+  Future<QuerySnapshot> getClassesDataByTeacherId(String? teacherId) {
+    return fireStore
+        .collection(CLASS)
+        .where('teacherId', isEqualTo: teacherId)
+        .get();
+  }
 
   Future<void> deleteClass(String classId) async {
     try {
