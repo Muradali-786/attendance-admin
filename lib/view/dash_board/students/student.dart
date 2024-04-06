@@ -52,110 +52,33 @@ class _StudentScreenState extends State<StudentScreen> {
           child: Row(
             children: [
               Expanded(
-                  flex: 2,
-                  child: Text('select teacher')),
-              Expanded(
-                child: Container(
-                  height: 40,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: AppColor.kPrimaryColor),
-                  ),
-                  child: FutureBuilder<QuerySnapshot>(
-                    future: TeacherController().getTeacherData(),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      } else if (snapshot.hasError) {
-                        return Center(
-                          child: Text('Error: ${snapshot.error}'),
-                        );
-                      } else {
-                        List<SignUpModel> snap = snapshot.data!.docs.map((doc) {
-                          Map<String, dynamic> data =
-                              doc.data() as Map<String, dynamic>;
-                          return SignUpModel.fromMap(data);
-                        }).toList();
-                        return DropdownButton<String>(
-                          items: snap.map((SignUpModel model) {
-                            return DropdownMenuItem<String>(
-                              value: model.teacherId,
-                              child: Text(model.name),
-                            );
-                          }).toList(),
-                          onChanged: (String? newValue) {
-                            setState(() {
-                              onTeacherSelect = newValue;
-                            });
-                          },
-                          value: onTeacherSelect,
-                          hint: Text('Select a Teacher',
-                              style: TextStyle(color: AppColor.kBlack)),
-                          isExpanded: true,
-                          style: TextStyle(color: AppColor.kBlack),
-                        );
-                      }
-                    },
-                  ),
+                child: TeacherDropdown(
+                  value: onTeacherSelect,
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      onTeacherSelect = newValue;
+                    });
+                  },
                 ),
               ),
-              SizedBox(width: 10),
+              const SizedBox(width: 10),
               Expanded(
-                  flex: 2,
-                  child: Text('select subject')),
-              Expanded(
-                child: Container(
-                  height: 40,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: AppColor.kPrimaryColor),
-                  ),
-                  child: FutureBuilder<QuerySnapshot>(
-                    future: ClassController()
-                        .getClassesDataByTeacherId(onTeacherSelect.toString()),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      } else if (snapshot.hasError) {
-                        return Center(
-                          child: Text('Error: ${snapshot.error}'),
-                        );
-                      } else {
-                        List<ClassInputModel> snap = snapshot.data!.docs.map((doc) {
-                          Map<String, dynamic> data =
-                              doc.data() as Map<String, dynamic>;
-                          return ClassInputModel.fromMap(data);
-                        }).toList();
-                        return DropdownButton<String>(
-                          items: snap.map((ClassInputModel model) {
-                            return DropdownMenuItem<String>(
-                              value: model.subjectId,
-                              child: Text(model.subjectName.toString()),
-                            );
-                          }).toList(),
-                          onChanged: (String? newValue) {
-                            setState(() {
-                              onSubjectSelect = newValue;
-                            });
-                          },
-                          value: onSubjectSelect,
-                          hint: Text('Select a subject',
-                              style: TextStyle(color: AppColor.kBlack)),
-                          isExpanded: true,
-                          style: TextStyle(color: AppColor.kBlack),
-                        );
-                      }
-                    },
-                  ),
-                ),
-              ),
+                  child: SubjectDropdown(
+                value: onSubjectSelect,
+                onChanged: (String? newValue) {
+                  setState(() {
+                    onSubjectSelect = newValue;
+
+                  });
+                },
+                teacherId: onTeacherSelect.toString(),
+              ))
             ],
           ),
         ),
         FutureBuilder<QuerySnapshot>(
-          future: StudentController().getAllStudentDataByClassId(onSubjectSelect.toString()),
+          future: StudentController()
+              .getAllStudentDataByClassId(onSubjectSelect.toString()),
           builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Text('loading');
@@ -228,8 +151,118 @@ class _StudentScreenState extends State<StudentScreen> {
             }
           },
         ),
-
       ],
+    );
+  }
+}
+
+class TeacherDropdown extends StatelessWidget {
+  final String? value;
+  final ValueChanged<String?> onChanged;
+
+  const TeacherDropdown({
+    Key? key,
+    required this.value,
+    required this.onChanged,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 40,
+      decoration: BoxDecoration(
+        border: Border.all(color: AppColor.kPrimaryColor),
+      ),
+      child: FutureBuilder<QuerySnapshot>(
+        future: TeacherController().getTeacherData(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text('Error: ${snapshot.error}'),
+            );
+          } else {
+            List<SignUpModel> snap = snapshot.data!.docs.map((doc) {
+              Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+              return SignUpModel.fromMap(data);
+            }).toList();
+            return DropdownButton<String>(
+              items: snap.map((SignUpModel model) {
+                return DropdownMenuItem<String>(
+                  value: model.teacherId,
+                  child: Text(model.name),
+                );
+              }).toList(),
+              onChanged: onChanged,
+              value: value,
+              hint: Text('Select a Teacher',
+                  style: TextStyle(color: AppColor.kBlack)),
+              isExpanded: true,
+              style: TextStyle(color: AppColor.kBlack),
+            );
+          }
+        },
+      ),
+    );
+  }
+}
+
+class SubjectDropdown extends StatelessWidget {
+  final String? value;
+  final ValueChanged<String?> onChanged;
+  final String teacherId;
+
+  const SubjectDropdown({
+    Key? key,
+    required this.value,
+    required this.onChanged,
+    required this.teacherId,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 40,
+      decoration: BoxDecoration(
+        border: Border.all(color: AppColor.kPrimaryColor),
+      ),
+      child: FutureBuilder<QuerySnapshot>(
+        future: ClassController().getClassesDataByTeacherId(teacherId),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text('Error: ${snapshot.error}'),
+            );
+          } else {
+            List<ClassInputModel> snap = snapshot.data!.docs.map((doc) {
+              Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+              return ClassInputModel.fromMap(data);
+            }).toList();
+            String? initialValue = snap.isNotEmpty ? snap[0].subjectId : null;
+            return DropdownButton<String>(
+              items: snap.map((ClassInputModel model) {
+                return DropdownMenuItem<String>(
+                  value: model.subjectId,
+                  child: Text(model.subjectName.toString()),
+                );
+              }).toList(),
+              onChanged: onChanged,
+              value: value ?? initialValue,
+              hint: Text('Select a subject',
+                  style: TextStyle(color: AppColor.kBlack)),
+              isExpanded: true,
+              style: TextStyle(color: AppColor.kBlack),
+            );
+          }
+        },
+      ),
     );
   }
 }
