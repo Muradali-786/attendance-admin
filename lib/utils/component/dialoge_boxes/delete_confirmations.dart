@@ -50,7 +50,7 @@ Future<void> showDeleteStudentConfirmationDialog(
       return AlertDialog(
         title: const Text("Delete"),
         content: Text(
-            "Are you sure you want to delete student ${model.studentName}(${model.studentRollNo}).All the attendance history for this student will be lost"),
+            "Are you sure you want to delete student ${model.studentName}(${model.studentRollNo})\n.All the attendance history for this student will be lost"),
         actions: [
           TextButton(
             onPressed: () {

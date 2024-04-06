@@ -14,7 +14,7 @@ class CustomRoundButton extends StatelessWidget {
     required this.title,
     required this.onPress,
     required this.buttonColor,
-    this.width = double.infinity,
+    this.width = 150,
     this.height = 50,
     this.loading = false,
   }) : super(key: key);

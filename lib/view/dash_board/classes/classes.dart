@@ -35,7 +35,7 @@ class _ClassesScreenState extends State<ClassesScreen> {
                 alignment: Alignment.topLeft,
                 child: Text('Course Information',
                     style: TextStyle(
-                        fontSize: 36,
+                        fontSize: 24,
                         fontWeight: FontWeight.bold,
                         color: AppColor.kPrimaryColor)),
               ),

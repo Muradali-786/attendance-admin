@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../constant/app_style/app_colors.dart';
-import '../../../../model/class_model.dart';
 import '../../../../model/sign_up_model.dart';
 import '../../../../utils/component/custom_button.dart';
 import '../../../../utils/component/dialog_text_field.dart';

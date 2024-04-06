@@ -1,12 +1,9 @@
 import 'package:attendance_admin/constant/app_style/app_colors.dart';
-import 'package:attendance_admin/constant/app_style/app_styles.dart';
 import 'package:attendance_admin/model/sign_up_model.dart';
-import 'package:attendance_admin/view/dash_board/classes/classes.dart';
 import 'package:attendance_admin/view/dash_board/teachers/register_teacher/register_teacher_dialog.dart';
 import 'package:attendance_admin/view_model/teacher/teacher_controller.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 import '../../../utils/component/custom_button.dart';
 import '../../../utils/component/custom_shimmer_effect.dart';
@@ -35,7 +32,7 @@ class _TeachersScreenState extends State<TeachersScreen> {
                alignment: Alignment.topLeft,
                child: Text('Faculty Information',
                    style: TextStyle(
-                       fontSize: 36,
+                       fontSize: 24,
                        fontWeight: FontWeight.bold,
                        color: AppColor.kPrimaryColor)),
              ),

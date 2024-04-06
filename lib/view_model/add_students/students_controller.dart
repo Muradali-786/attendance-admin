@@ -280,7 +280,7 @@ class StudentController with ChangeNotifier {
     }
   }
 
-  Stream<QuerySnapshot> getAllStudentData(String classId) {
+  Stream<QuerySnapshot> streamAllStudentDataByClassId(String classId) {
     return _fireStore
         .collection(CLASS)
         .doc(classId)

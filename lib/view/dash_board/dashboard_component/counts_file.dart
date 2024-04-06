@@ -1,9 +1,7 @@
 import 'package:attendance_admin/constant/app_style/app_colors.dart';
-
 import 'package:attendance_admin/view_model/dash_board/dash_board_controller.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '../../../model/dep_states_model.dart';
