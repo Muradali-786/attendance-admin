@@ -4,6 +4,7 @@ import 'package:attendance_admin/model/sign_up_model.dart';
 import 'package:attendance_admin/model/teacher_info_dummy.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class TeacherInformation extends StatefulWidget {
   const TeacherInformation({Key? key}) : super(key: key);
@@ -21,7 +22,7 @@ class _TeacherInformationState extends State<TeacherInformation> {
       padding: const EdgeInsets.all(16),
       decoration: const BoxDecoration(
         color: AppColor.kSecondaryColor,
-        borderRadius:  BorderRadius.all(Radius.circular(10)),
+        borderRadius: BorderRadius.all(Radius.circular(10)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -39,38 +40,15 @@ class _TeacherInformationState extends State<TeacherInformation> {
               stream: _firestore.collection(TEACHER).snapshots(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
-                  return DataTable(
-                    columnSpacing: 16,
-                    columns: [
-                      DataColumn(
-                        label: Text(
-                          "Name",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                      DataColumn(
-                        label: Text(
-                          "Email",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                      DataColumn(
-                        label: Text(
-                          "Last Active",
-
-                          style: TextStyle(color: Colors.white),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ],
-                    rows:List.generate(
-                      teacherInfoDummy.length,
-                          (index) => TeacherInfoFake(teacherInfoDummy[index]),
-                    ),
+                  EasyLoading.show();
+                  return _dataTable();
+                } else if (snapshot.hasError) {
+                  EasyLoading.show(
+                    status: 'Something went wrong',
                   );
-
-                } else {
+                  return _dataTable();
+                } else if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
+                  EasyLoading.dismiss();
                   List<SignUpModel> snap = snapshot.data!.docs
                       .map((doc) => SignUpModel.fromMap(
                           doc.data() as Map<String, dynamic>))
@@ -94,16 +72,19 @@ class _TeacherInformationState extends State<TeacherInformation> {
                       DataColumn(
                         label: Text(
                           "Last Active",
-
                           style: TextStyle(color: Colors.white),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
                     ],
-                    rows:
-                        snap.map((model) => teacherInfoRow(model)).toList(),
+                    rows: snap.map((model) => teacherInfoRow(model)).toList(),
                   );
+                } else {
+                  EasyLoading.show(
+                    status: 'Something went wrong',
+                  );
+                  return _dataTable();
                 }
               },
             ),
@@ -112,9 +93,41 @@ class _TeacherInformationState extends State<TeacherInformation> {
       ),
     );
   }
+
+  Widget _dataTable() {
+    return DataTable(
+      columnSpacing: 16,
+      columns: [
+        DataColumn(
+          label: Text(
+            "Name",
+            style: TextStyle(color: Colors.white),
+          ),
+        ),
+        DataColumn(
+          label: Text(
+            "Email",
+            style: TextStyle(color: Colors.white),
+          ),
+        ),
+        DataColumn(
+          label: Text(
+            "Last Active",
+            style: TextStyle(color: Colors.white),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+      ],
+      rows: List.generate(
+        teacherInfoDummy.length,
+        (index) => TeacherInfoFake(teacherInfoDummy[index]),
+      ),
+    );
+  }
 }
 
-DataRow TeacherInfoFake(TeacherInfoDummy  e) {
+DataRow TeacherInfoFake(TeacherInfoDummy e) {
   return DataRow(
     cells: [
       DataCell(
@@ -140,7 +153,6 @@ DataRow TeacherInfoFake(TeacherInfoDummy  e) {
     ],
   );
 }
-
 
 DataRow teacherInfoRow(SignUpModel model) {
   return DataRow(

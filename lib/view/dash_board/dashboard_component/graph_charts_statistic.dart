@@ -24,11 +24,15 @@ class _GraphChartState extends State<GraphChart> {
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return DummyChart();
-          } else {
+          } else if (snapshot.hasError) {
+            return DummyChart();
+          } else if (snapshot.hasData && snapshot.data!.exists) {
             dynamic data = snapshot.data!.data();
             return GraphChartsStatistic(
               data: data,
             );
+          } else {
+            return DummyChart();
           }
         },
       ),
@@ -72,15 +76,14 @@ class GraphChartsStatistic extends StatelessWidget {
           StudentInfoCard(
             svgSrc: "assets/icons/Documents.svg",
             title: "Total Presents",
-            kcolor:  Color(0xFF007EE5),
+            kcolor: Color(0xFF007EE5),
             stdStates: data['presentStudents'].toString(),
             outOftotal: data['totalStudent'].toString(),
           ),
           StudentInfoCard(
             svgSrc: "assets/icons/Documents.svg",
             title: "Total Leaves",
-              kcolor: Color(0xFF26E5FF),
-
+            kcolor: Color(0xFF26E5FF),
             stdStates: data['leavesStudents'].toString(),
             outOftotal: data['totalStudent'].toString(),
           ),
@@ -91,7 +94,6 @@ class GraphChartsStatistic extends StatelessWidget {
             stdStates: data['absentStudents'].toString(),
             outOftotal: data['totalStudent'].toString(),
           ),
-
           StudentInfoCard(
             svgSrc: "assets/icons/drop_box.svg",
             title: "Summary",
@@ -106,14 +108,14 @@ class GraphChartsStatistic extends StatelessWidget {
 }
 
 class StudentInfoCard extends StatelessWidget {
-  const StudentInfoCard({
-    Key? key,
-    required this.title,
-    required this.svgSrc,
-    required this.stdStates,
-    required this.outOftotal,
-    required this.kcolor
-  }) : super(key: key);
+  const StudentInfoCard(
+      {Key? key,
+      required this.title,
+      required this.svgSrc,
+      required this.stdStates,
+      required this.outOftotal,
+      required this.kcolor})
+      : super(key: key);
 
   final String title, svgSrc, stdStates;
   final String outOftotal;
@@ -135,7 +137,10 @@ class StudentInfoCard extends StatelessWidget {
           SizedBox(
             height: 20,
             width: 20,
-            child: SvgPicture.asset(svgSrc,colorFilter: ColorFilter.mode(kcolor, BlendMode.srcIn),),
+            child: SvgPicture.asset(
+              svgSrc,
+              colorFilter: ColorFilter.mode(kcolor, BlendMode.srcIn),
+            ),
           ),
           Expanded(
             child: Padding(
@@ -173,5 +178,3 @@ class StudentInfoCard extends StatelessWidget {
     );
   }
 }
-
-

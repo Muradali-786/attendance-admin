@@ -3,6 +3,7 @@ import 'package:attendance_admin/constant/app_style/app_colors.dart';
 import 'package:attendance_admin/view_model/dash_board/dash_board_controller.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '../../../model/dep_states_model.dart';
@@ -45,7 +46,23 @@ class CountFiles extends StatelessWidget {
                     data: data1,
                   ),
                 );
-              } else {
+              }
+              else if (snapshot.hasError) {
+                return Responsive(
+                  mobile: FileInfoCardGridView(
+                    crossAxisCount: _size.width < 650 ? 2 : 4,
+                    childAspectRatio: _size.width < 650 ? 1.3 : 1,
+                    data: data1,
+                  ),
+                  tablet: FileInfoCardGridView(
+                    data: data1,
+                  ),
+                  desktop: FileInfoCardGridView(
+                    childAspectRatio: _size.width < 1400 ? 1.1 : 1.4,
+                    data: data1,
+                  ),
+                );
+              } else if(snapshot.hasData && snapshot.data!.exists){
                 dynamic data = snapshot.data!.data();
 
                 return Responsive(
@@ -60,6 +77,22 @@ class CountFiles extends StatelessWidget {
                   desktop: FileInfoCardGridView(
                     childAspectRatio: _size.width < 1400 ? 1.1 : 1.4,
                     data: data,
+                  ),
+                );
+              }
+              else  {
+                return Responsive(
+                  mobile: FileInfoCardGridView(
+                    crossAxisCount: _size.width < 650 ? 2 : 4,
+                    childAspectRatio: _size.width < 650 ? 1.3 : 1,
+                    data: data1,
+                  ),
+                  tablet: FileInfoCardGridView(
+                    data: data1,
+                  ),
+                  desktop: FileInfoCardGridView(
+                    childAspectRatio: _size.width < 1400 ? 1.1 : 1.4,
+                    data: data1,
                   ),
                 );
               }
@@ -96,9 +129,8 @@ class FileInfoCardGridView extends StatelessWidget {
           childAspectRatio: childAspectRatio,
         ),
         itemBuilder: (context, index) {
-
           if (index == 0) {
-            String teacher = data['totalTeacher'].toString() ;
+            String teacher = data['totalTeacher'].toString();
             return FileInfoCard(
               info: departmentStatesList[index],
               data: teacher,
@@ -181,7 +213,7 @@ class FileInfoCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Text(
-                 "#$data",
+                "#$data",
                 style: Theme.of(context)
                     .textTheme
                     .bodySmall!
@@ -199,11 +231,9 @@ class ProgressLine extends StatelessWidget {
   const ProgressLine({
     Key? key,
     this.color = AppColor.kPrimaryColor,
-
   }) : super(key: key);
 
   final Color? color;
-
 
   @override
   Widget build(BuildContext context) {
@@ -219,7 +249,7 @@ class ProgressLine extends StatelessWidget {
         ),
         LayoutBuilder(
           builder: (context, constraints) => Container(
-            width: constraints.maxWidth * (100/ 100),
+            width: constraints.maxWidth * (100 / 100),
             height: 5,
             decoration: BoxDecoration(
               color: color,
