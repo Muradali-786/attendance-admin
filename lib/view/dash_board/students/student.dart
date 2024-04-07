@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 
 import '../../../constant/app_style/app_colors.dart';
 import '../../../model/sign_up_model.dart';
+import '../../../utils/component/std_and_teacher_drop_down.dart';
 
 class StudentScreen extends StatefulWidget {
   static const String id = '\studentsScreen';
@@ -25,144 +26,155 @@ class _StudentScreenState extends State<StudentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Container(
-              alignment: Alignment.topLeft,
-              child: Text('Students Information',
-                  style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: AppColor.kPrimaryColor)),
-            ),
-            IconButton(
-                onPressed: () {},
-                icon: Icon(
-                  Icons.add_circle,
-                  color: AppColor.kSecondaryColor,
-                )),
-          ],
-        ),
-        Container(
-          height: 40,
-          width: double.infinity,
-          decoration:
-              BoxDecoration(border: Border.all(color: AppColor.kPrimaryColor)),
-          child: Row(
+    int rowIndex = 0;
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Expanded(
-                child: TeacherDropdown(
-                  value: onTeacherSelect,
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      onTeacherSelect = newValue;
-                    });
-                  },
-                ),
+              Container(
+                alignment: Alignment.topLeft,
+                child: Text('Students Information',
+                    style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: AppColor.kPrimaryColor)),
               ),
-              const SizedBox(width: 10),
-              Expanded(
-                  child: SubjectDropdown(
-                value: onSubjectSelect,
-                onChanged: (String? newValue) {
-                  setState(() {
-                    onSubjectSelect = newValue;
-                  });
-                },
-                teacherId: onTeacherSelect.toString(),
-              ))
+              IconButton(
+                  onPressed: () {},
+                  icon: Icon(
+                    Icons.add_circle,
+                    color: AppColor.kSecondaryColor,
+                  )),
             ],
           ),
-        ),
-        FutureBuilder<QuerySnapshot>(
-          future: StudentController()
-              .getAllStudentDataByClassId(onSubjectSelect.toString()),
-          builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Text('loading');
-            } else if (snapshot.hasError) {
-              return Text('Error');
-            } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-              return const Center(
-                child: Text(
-                  'No Student has been added in the class.',
-                ),
-              );
-            } else {
-              List<StudentModel> snap = snapshot.data!.docs.map((doc) {
-                Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-                return StudentModel.fromMap(data);
-              }).toList();
-
-              return Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                    color: AppColor.kSecondaryColor,
-                    borderRadius: BorderRadius.circular(8)),
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: DataTable(
-                    showCheckboxColumn: true,
-                    columns: [
-                      _dataColumnText('Roll No'),
-                      _dataColumnText('Name'),
-                      _dataColumnText('Absent'),
-                      _dataColumnText('Leaves'),
-                      _dataColumnText('Present'),
-                      _dataColumnText('%'),
-                      _dataColumnText('Actions'),
-                    ],
-                    rows: snap
-                        .map((student) => DataRow(
-                              cells: [
-                                _dataCellText(student.studentRollNo),
-                                _dataCellText(student.studentName),
-                                _dataCellText(student.totalAbsent.toString()),
-                                _dataCellText(student.totalLeaves.toString()),
-                                _dataCellText(student.totalPresent.toString()),
-                                _dataCellText(
-                                    student.attendancePercentage.toString()),
-                                DataCell(Row(
-                                  children: [
-                                    IconButton(
-                                      icon: Icon(
-                                        Icons.edit,
-                                        color: AppColor.kWhite,
-                                      ),
-                                      onPressed: () {
-                                        updateStudentDialog(
-                                            context,
-                                            onSubjectSelect.toString(),
-                                            student);
-                                      },
-                                    ),
-                                    IconButton(
-                                      icon: Icon(
-                                        Icons.delete,
-                                        color: AppColor.kWhite,
-                                      ),
-                                      onPressed: () {
-                                        showDeleteStudentConfirmationDialog(
-                                            context,
-                                            student,
-                                            onSubjectSelect.toString());
-                                      },
-                                    ),
-                                  ],
-                                ))
-                              ],
-                            ))
-                        .toList(),
+          Container(
+            height: 40,
+            width: double.infinity,
+            decoration: BoxDecoration(
+                border: Border.all(color: AppColor.kPrimaryColor)),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TeacherDropdown(
+                    value: onTeacherSelect,
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        onTeacherSelect = newValue;
+                      });
+                    },
                   ),
                 ),
-              );
-            }
-          },
-        ),
-      ],
+                const SizedBox(width: 10),
+                Expanded(
+                    child: SubjectDropdown(
+                  value: onSubjectSelect,
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      onSubjectSelect = newValue;
+                    });
+                  },
+                  teacherId: onTeacherSelect.toString(),
+                ))
+              ],
+            ),
+          ),
+          FutureBuilder<QuerySnapshot>(
+            future: StudentController()
+                .getAllStudentDataByClassId(onSubjectSelect.toString()),
+            builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Text('loading');
+              } else if (snapshot.hasError) {
+                return Text('Error');
+              } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                return const Center(
+                  child: Text(
+                    'No Student has been added in the class.',
+                  ),
+                );
+              } else {
+                List<StudentModel> snap = snapshot.data!.docs.map((doc) {
+                  Map<String, dynamic> data =
+                      doc.data() as Map<String, dynamic>;
+                  return StudentModel.fromMap(data);
+                }).toList();
+
+                return SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: DataTable(
+                      showCheckboxColumn: true,
+
+                      headingRowColor: MaterialStateColor.resolveWith(
+                        (states) => AppColor.kSecondaryColor,
+                      ),
+                      dataRowColor: MaterialStateColor.resolveWith(
+                          (states) => AppColor.kWhite),
+                      dividerThickness: 2.0,
+                      border: TableBorder.all(color: AppColor.kGrey, width: 2),
+                      columns: [
+                        _dataColumnText('S.No'),
+                        _dataColumnText('Roll No'),
+                        _dataColumnText('Name'),
+                        _dataColumnText('Absent'),
+                        _dataColumnText('Leaves'),
+                        _dataColumnText('Present'),
+                        _dataColumnText('%'),
+                        _dataColumnText('Actions'),
+                      ],
+                      rows: snap.map((student) {
+                        rowIndex++;
+                        return DataRow(
+                          cells: [
+                            _dataCellText(rowIndex.toString()),
+                            _dataCellText(student.studentRollNo),
+                            _dataCellText(student.studentName),
+                            _dataCellText(student.totalAbsent.toString()),
+                            _dataCellText(student.totalLeaves.toString()),
+                            _dataCellText(student.totalPresent.toString()),
+                            _dataCellText("${student.attendancePercentage}%"),
+                            DataCell(Row(
+                              children: [
+                                IconButton(
+                                  icon: const Icon(
+                                    Icons.edit,
+                                    color: AppColor.kSecondaryColor,
+                                  ),
+                                  onPressed: () {
+                                    updateStudentDialog(
+                                      context,
+                                      onSubjectSelect.toString(),
+                                      student,
+                                    );
+                                  },
+                                ),
+                                IconButton(
+                                  icon: const Icon(
+                                    Icons.delete,
+                                    color: AppColor.kSecondaryColor,
+                                  ),
+                                  onPressed: () {
+                                    showDeleteStudentConfirmationDialog(context,
+                                        student, onSubjectSelect.toString());
+                                  },
+                                ),
+                              ],
+                            ))
+                          ],
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                );
+              }
+            },
+          ),
+        ],
+      ),
     );
   }
 
@@ -171,130 +183,21 @@ class _StudentScreenState extends State<StudentScreen> {
       Text(
         title,
         overflow: TextOverflow.ellipsis,
-        style: const TextStyle(color: AppColor.kTextWhiteColor),
+        style: const TextStyle(
+            color: AppColor.kPrimaryColor,
+            fontSize: 18,
+            fontWeight: FontWeight.w500),
       ),
     );
   }
 
   DataColumn _dataColumnText(String title) {
     return DataColumn(
+      tooltip: title,
       label: Text(
         title,
         style: const TextStyle(
             color: AppColor.kWhite, overflow: TextOverflow.ellipsis),
-      ),
-    );
-  }
-}
-
-class TeacherDropdown extends StatelessWidget {
-  final String? value;
-  final ValueChanged<String?> onChanged;
-
-  const TeacherDropdown({
-    Key? key,
-    required this.value,
-    required this.onChanged,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 40,
-      decoration: BoxDecoration(
-        border: Border.all(color: AppColor.kPrimaryColor),
-      ),
-      child: FutureBuilder<QuerySnapshot>(
-        future: TeacherController().getTeacherData(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          } else if (snapshot.hasError) {
-            return Center(
-              child: Text('Error: ${snapshot.error}'),
-            );
-          } else {
-            List<SignUpModel> snap = snapshot.data!.docs.map((doc) {
-              Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-              return SignUpModel.fromMap(data);
-            }).toList();
-            return DropdownButton<String>(
-              items: snap.map((SignUpModel model) {
-                return DropdownMenuItem<String>(
-                  value: model.teacherId,
-                  child: Text(model.name),
-                );
-              }).toList(),
-              onChanged: onChanged,
-              value: value,
-              hint: Text('Select a Teacher',
-                  style: TextStyle(color: AppColor.kBlack)),
-              isExpanded: true,
-              style: TextStyle(color: AppColor.kBlack),
-            );
-          }
-        },
-      ),
-    );
-  }
-}
-
-class SubjectDropdown extends StatelessWidget {
-  String? value;
-  final ValueChanged<String?> onChanged;
-  final String teacherId;
-
-  SubjectDropdown({
-    Key? key,
-    required this.value,
-    required this.onChanged,
-    required this.teacherId,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 40,
-      decoration: BoxDecoration(
-        border: Border.all(color: AppColor.kPrimaryColor),
-      ),
-      child: FutureBuilder<QuerySnapshot>(
-        future: ClassController().getClassesDataByTeacherId(teacherId),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          } else if (snapshot.hasError) {
-            return Center(
-              child: Text('Error: ${snapshot.error}'),
-            );
-          } else if (snapshot.hasData) {
-            List<ClassInputModel> snap = snapshot.data!.docs.map((doc) {
-              Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-              return ClassInputModel.fromMap(data);
-            }).toList();
-            value = snap.isNotEmpty ? snap[0].subjectId : null;
-            return DropdownButton<String>(
-              items: snap.map((ClassInputModel model) {
-                return DropdownMenuItem<String>(
-                  value: model.subjectId,
-                  child: Text(model.subjectName.toString()),
-                );
-              }).toList(),
-              onChanged: onChanged,
-              value: value,
-              hint: Text('Select a subject',
-                  style: TextStyle(color: AppColor.kBlack)),
-              isExpanded: true,
-              style: TextStyle(color: AppColor.kBlack),
-            );
-          } else {
-            return Text('Empty');
-          }
-        },
       ),
     );
   }

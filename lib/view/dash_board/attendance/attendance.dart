@@ -10,10 +10,11 @@ import '../../../constant/app_style/app_colors.dart';
 import '../../../constant/app_style/app_styles.dart';
 import '../../../model/attendance_model.dart';
 import '../../../utils/component/custom_button.dart';
+import '../../../utils/component/std_and_teacher_drop_down.dart';
 import '../../../utils/component/time_picker.dart';
 import '../../../utils/utils.dart';
 import '../../../view_model/attendance/attendance_controller.dart';
-import '../students/student.dart';
+
 
 class AttendanceScreen extends StatefulWidget {
   static const String id = '\attendanceScreen';

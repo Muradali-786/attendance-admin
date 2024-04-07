@@ -4,6 +4,7 @@ import 'package:attendance_admin/view/dash_board/teachers/register_teacher/regis
 import 'package:attendance_admin/view_model/teacher/teacher_controller.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 import '../../../utils/component/custom_button.dart';
 import '../../../utils/component/custom_shimmer_effect.dart';
@@ -21,108 +22,140 @@ class _TeachersScreenState extends State<TeachersScreen> {
 
   @override
   Widget build(BuildContext context) {
+    int rowIndex=0;
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: Column(
-        children: [
-         Row(
-           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-           children: [
-             Container(
-               alignment: Alignment.topLeft,
-               child: Text('Faculty Information',
-                   style: TextStyle(
-                       fontSize: 24,
-                       fontWeight: FontWeight.bold,
-                       color: AppColor.kPrimaryColor)),
-             ),
-             IconButton(onPressed: (){
-               registerNewTeacherDialog(context);
-             }, icon: Icon(Icons.add_circle,color: AppColor.kSecondaryColor,)),
-           ],
-         ),
-          StreamBuilder<QuerySnapshot>(
-            stream: _teacherController.streamTeacherData(),
-            builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return ShimmerLoadingEffect();
-              } else if (snapshot.hasError) {
-                return Text('Error');
-              } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                return const Center(
-                  child: Text(
-                    'No Teacher has been added in the class.',
-                  ),
-                );
-              } else {
-                List<SignUpModel> snap = snapshot.data!.docs.map((doc) {
-                  Map<String, dynamic> data =
-                      doc.data() as Map<String, dynamic>;
-                  return SignUpModel.fromMap(data);
-                }).toList();
+      padding: const EdgeInsets.all(16.0),
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+           Row(
+             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+             children: [
+               Container(
+                 alignment: Alignment.topLeft,
+                 child: Text('Faculty Information',
+                     style: TextStyle(
+                         fontSize: 24,
+                         fontWeight: FontWeight.bold,
+                         color: AppColor.kPrimaryColor)),
+               ),
+               IconButton(onPressed: (){
+                 registerNewTeacherDialog(context);
+               }, icon: Icon(Icons.add_circle,color: AppColor.kSecondaryColor,)),
+             ],
+           ),
+            StreamBuilder<QuerySnapshot>(
+              stream: _teacherController.streamTeacherData(),
+              builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  EasyLoading.show(
+                    status: 'Loading'
+                  );
+                  return Container();
+                } else if (snapshot.hasError) {
+                  EasyLoading.dismiss();
+                  return Text('Error');
+                } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                  EasyLoading.dismiss();
+                  return const Center(
+                    child: Text(
+                      'No Teacher has been added in the class.',
+                    ),
+                  );
+                } else {
+                  EasyLoading.dismiss();
+                  List<SignUpModel> snap = snapshot.data!.docs.map((doc) {
+                    Map<String, dynamic> data =
+                        doc.data() as Map<String, dynamic>;
+                    return SignUpModel.fromMap(data);
+                  }).toList();
+                  return SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: DataTable(
+                      showCheckboxColumn: true,
+                      headingRowColor: MaterialStateColor.resolveWith(
+                            (states) => AppColor.kSecondaryColor,
+                      ),
+                      dataRowColor: MaterialStateColor.resolveWith(
+                              (states) => AppColor.kWhite),
+                      dividerThickness: 2.0,
+                      border: TableBorder.all(color: AppColor.kGrey, width: 2),
+                      columns: [
+                        _dataColumnText('S.No'),
+                        _dataColumnText('Name'),
+                        _dataColumnText('Gmail'),
+                        _dataColumnText('Course Load'),
+                        _dataColumnText('Actions'),
 
-                return Expanded(
-                  child: ListView.builder(
-                    itemCount: snap.length,
-                    physics: const BouncingScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 6),
-                        child: Container(
-                            width: double.infinity,
-                            height: 70,
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
-                            decoration: BoxDecoration(
-                              color: AppColor.kWhite,
-                              borderRadius: BorderRadius.circular(2),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: AppColor.kBlack.withOpacity(0.3),
-                                  spreadRadius: 0,
-                                  blurRadius: 1.5,
-                                  offset: const Offset(0, 1),
-                                ),
-                              ],
-                            ),
-                            child: Row(
+                      ],
+                      rows: snap.map((teacher) {
+                        rowIndex++;
+                        return DataRow(
+                          cells: [
+                            _dataCellText(rowIndex.toString()),
+                            _dataCellText(teacher.name),
+                            _dataCellText(teacher.email),
+                            _dataCellText('5'),
+
+                            DataCell(Row(
                               children: [
-                                Expanded(
-                                  flex: 2,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(snap[index].name),
-                                      Text(snap[index].email),
-                                    ],
+                                IconButton(
+                                  icon: const Icon(
+                                    Icons.edit,
+                                    color: AppColor.kSecondaryColor,
                                   ),
+                                  onPressed: () {
+
+                                  },
                                 ),
-                                Expanded(
-                                    child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    CustomButton(
-                                        title: 'Update',
-                                        onTap: () {},
-                                        kcolor: AppColor.kPrimaryColor),
-                                    CustomButton(
-                                        title: 'Delete',
-                                        onTap: () {},
-                                        kcolor: AppColor.kSecondaryColor),
-                                  ],
-                                ))
+                                IconButton(
+                                  icon: const Icon(
+                                    Icons.delete,
+                                    color: AppColor.kSecondaryColor,
+                                  ),
+                                  onPressed: () {
+
+                                  },
+                                ),
                               ],
-                            )),
-                      );
-                    },
-                  ),
-                );
-              }
-            },
-          ),
-        ],
+                            ))
+                          ],
+                        );
+                      }).toList(),
+                    ),
+                  );
+
+
+                }
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+  DataCell _dataCellText(String title) {
+    return DataCell(
+      Text(
+        title,
+        overflow: TextOverflow.ellipsis,
+        textAlign: TextAlign.start,
+        style: const TextStyle(
+            color: AppColor.kPrimaryColor,
+            fontSize: 18,
+            fontWeight: FontWeight.w500),
+      ),
+    );
+  }
+
+  DataColumn _dataColumnText(String title) {
+    return DataColumn(
+      tooltip: title,
+      label: Text(
+        title,
+
+        style: const TextStyle(
+            color: AppColor.kWhite, overflow: TextOverflow.ellipsis),
       ),
     );
   }

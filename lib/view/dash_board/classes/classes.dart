@@ -23,114 +23,135 @@ class _ClassesScreenState extends State<ClassesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    int rowIndex = 0;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Column(
-        children: [
-
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                alignment: Alignment.topLeft,
-                child: Text('Course Information',
-                    style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: AppColor.kPrimaryColor)),
-              ),
-              IconButton(onPressed: (){
-                registerNewClassDialog(context);
-              }, icon: Icon(Icons.add_circle,color: AppColor.kSecondaryColor,)),
-            ],
-          ),
-          StreamBuilder<QuerySnapshot>(
-            stream: _controller.streamAllClassesData(),
-            builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return ShimmerLoadingEffect();
-              } else if (snapshot.hasError) {
-                return Text('Error');
-              } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                return  Text(
-                  'No Class Available to show.',
-                );
-              } else {
-                List<ClassInputModel> snap = snapshot.data!.docs.map((doc) {
-                  Map<String, dynamic> data =
-                      doc.data() as Map<String, dynamic>;
-                  return ClassInputModel.fromMap(data);
-                }).toList();
-
-                return Expanded(
-                  child: ListView.builder(
-                    itemCount: snap.length,
-                    physics: const BouncingScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 6),
-                        child: Container(
-                            width: double.infinity,
-                            height: 70,
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
-                            decoration: BoxDecoration(
-                              color: AppColor.kWhite,
-                              borderRadius: BorderRadius.circular(2),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: AppColor.kBlack.withOpacity(0.3),
-                                  spreadRadius: 0,
-                                  blurRadius: 1.5,
-                                  offset: const Offset(0, 1),
-                                ),
-                              ],
-                            ),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  flex: 2,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(snap[index].subjectName.toString()),
-                                      Text(
-                                          "${snap[index].departmentName}-(${snap[index].batchName})"),
-                                    ],
-                                  ),
-                                ),
-                                Expanded(
-                                    child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    CustomButton(
-                                        title: 'Update',
-                                        onTap: () {
-                                          updateClassValueDialog(
-                                              context, snap[index]);
-                                        },
-                                        kcolor: AppColor.kPrimaryColor),
-                                    CustomButton(
-                                        title: 'Delete',
-                                        onTap: () {
-                                          showDeleteClassConfirmationDialog(
-                                              context, snap[index]);
-                                        },
-                                        kcolor: AppColor.kSecondaryColor),
-                                  ],
-                                ))
-                              ],
-                            )),
-                      );
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  alignment: Alignment.topLeft,
+                  child: Text('Course Information',
+                      style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: AppColor.kPrimaryColor)),
+                ),
+                IconButton(
+                    onPressed: () {
+                      registerNewClassDialog(context);
                     },
-                  ),
-                );
-              }
-            },
-          ),
-        ],
+                    icon: Icon(
+                      Icons.add_circle,
+                      color: AppColor.kSecondaryColor,
+                    )),
+              ],
+            ),
+            StreamBuilder<QuerySnapshot>(
+              stream: _controller.streamAllClassesData(),
+              builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return ShimmerLoadingEffect();
+                } else if (snapshot.hasError) {
+                  return Text('Error');
+                } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                  return Text(
+                    'No Class Available to show.',
+                  );
+                } else {
+                  List<ClassInputModel> snap = snapshot.data!.docs.map((doc) {
+                    Map<String, dynamic> data =
+                        doc.data() as Map<String, dynamic>;
+                    return ClassInputModel.fromMap(data);
+                  }).toList();
+                  return DataTable(
+                    showCheckboxColumn: true,
+                    headingRowColor: MaterialStateColor.resolveWith(
+                      (states) => AppColor.kSecondaryColor,
+                    ),
+                    dataRowColor: MaterialStateColor.resolveWith(
+                        (states) => AppColor.kWhite),
+                    dividerThickness: 2.0,
+                    border: TableBorder.all(color: AppColor.kGrey, width: 2),
+                    columns: [
+                      _dataColumnText('S.No'),
+                      _dataColumnText('Name'),
+                      _dataColumnText('Batch'),
+                      _dataColumnText('Department'),
+                      _dataColumnText('Course Load'),
+                      _dataColumnText('Req %'),
+                      _dataColumnText('Actions'),
+                    ],
+                    rows: snap.map((course) {
+                      rowIndex++;
+                      return DataRow(
+                        cells: [
+                          _dataCellText(rowIndex.toString()),
+                          _dataCellText(course.subjectName.toString()),
+                          _dataCellText(course.batchName.toString()),
+                          _dataCellText(course.departmentName.toString()),
+                          _dataCellText(course.totalClasses.toString()),
+                          _dataCellText("${course.percentage}%"),
+                          DataCell(Row(
+                            children: [
+                              IconButton(
+                                icon: const Icon(
+                                  Icons.edit,
+                                  color: AppColor.kSecondaryColor,
+                                ),
+                                onPressed: () {
+                                  updateClassValueDialog(context, course);
+                                },
+                              ),
+                              IconButton(
+                                icon: const Icon(
+                                  Icons.delete,
+                                  color: AppColor.kSecondaryColor,
+                                ),
+                                onPressed: () {
+                                  showDeleteClassConfirmationDialog(
+                                      context, course);
+                                },
+                              ),
+                            ],
+                          ))
+                        ],
+                      );
+                    }).toList(),
+                  );
+                }
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  DataCell _dataCellText(String title) {
+    return DataCell(
+      Text(
+        title,
+        overflow: TextOverflow.ellipsis,
+        textAlign: TextAlign.start,
+        style: const TextStyle(
+            color: AppColor.kPrimaryColor,
+            fontSize: 18,
+            fontWeight: FontWeight.w500),
+      ),
+    );
+  }
+
+  DataColumn _dataColumnText(String title) {
+    return DataColumn(
+      tooltip: title,
+      label: Text(
+        title,
+        style: const TextStyle(
+            color: AppColor.kWhite, overflow: TextOverflow.ellipsis),
       ),
     );
   }
