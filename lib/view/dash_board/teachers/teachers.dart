@@ -136,6 +136,7 @@ class _TeachersScreenState extends State<TeachersScreen> {
   }
   DataCell _dataCellText(String title) {
     return DataCell(
+
       Text(
         title,
         overflow: TextOverflow.ellipsis,

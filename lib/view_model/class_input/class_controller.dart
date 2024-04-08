@@ -75,6 +75,7 @@ class ClassController with ChangeNotifier {
         .get();
   }
 
+
   Future<void> deleteClass(String classId) async {
     try {
       await fireStore.collection(CLASS).doc(classId).delete();

@@ -1,5 +1,6 @@
 import 'package:attendance_admin/model/class_model.dart';
 import 'package:attendance_admin/utils/component/dialoge_boxes/delete_confirmations.dart';
+import 'package:attendance_admin/view/dash_board/classes/import/import_dialog_box.dart';
 import 'package:attendance_admin/view/dash_board/classes/register/register_new_class_dialog.dart';
 import 'package:attendance_admin/view/dash_board/classes/update/updae_class_dialog.dart';
 import 'package:attendance_admin/view_model/class_input/class_controller.dart';
@@ -114,6 +115,16 @@ class _ClassesScreenState extends State<ClassesScreen> {
                                 onPressed: () {
                                   showDeleteClassConfirmationDialog(
                                       context, course);
+                                },
+                              ),
+                              IconButton(
+                                icon: const Icon(
+                                  Icons.more_vert,
+                                  color: AppColor.kSecondaryColor,
+                                ),
+                                onPressed: () {
+                                  showImportDialog(
+                                      context, course.subjectId.toString());
                                 },
                               ),
                             ],
