@@ -8,7 +8,7 @@ import '../../../../utils/component/dialog_text_field.dart';
 import '../../../../utils/utils.dart';
 import '../../../../view_model/class_input/class_controller.dart';
 
-Future<void> registerNewClassDialog(BuildContext context) async {
+Future<void> registerNewClassDialog(BuildContext context,String? teacherId) async {
   final formKey = GlobalKey<FormState>();
   TextEditingController subjectController = TextEditingController();
   FocusNode subjectFocus = FocusNode();
@@ -50,7 +50,7 @@ Future<void> registerNewClassDialog(BuildContext context) async {
                       flex: 2,
                     ),
                     Text(
-                      'Edit Class',
+                      'Create New Class',
                       style: TextStyle(fontSize: 22, color: AppColor.kWhite),
                     ),
                     const Spacer(),
@@ -191,7 +191,7 @@ Future<void> registerNewClassDialog(BuildContext context) async {
                               ClassInputModel classInputModel = ClassInputModel(
                                 subjectName: subjectController.text,
                                 departmentName: departmentController.text,
-                                teacherId:' teacherId',
+                                teacherId:teacherId,
                                 batchName: batchController.text,
                                 percentage:
                                     int.tryParse(attendancePercentageController.text),

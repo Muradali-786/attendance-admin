@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 
 import '../../../constant/app_style/app_colors.dart';
 import '../../../model/sign_up_model.dart';
+import '../../../utils/component/custom_button.dart';
 import '../../../utils/component/std_and_teacher_drop_down.dart';
 
 class StudentScreen extends StatefulWidget {
@@ -140,29 +141,29 @@ class _StudentScreenState extends State<StudentScreen> {
                               _dataCellText("${student.attendancePercentage}%"),
                               DataCell(Row(
                                 children: [
-                                  IconButton(
-                                    icon: const Icon(
-                                      Icons.edit,
-                                      color: AppColor.kSecondaryColor,
-                                    ),
-                                    onPressed: () {
+                                  CustomIconButton(
+                                    icon: Icons.edit,
+                                    tooltip: 'Click the button to edit student.',
+                                    onTap: () {
                                       updateStudentDialog(
                                         context,
                                         onSubjectSelect.toString(),
                                         student,
                                       );
+
+
                                     },
                                   ),
-                                  IconButton(
-                                    icon: const Icon(
-                                      Icons.delete,
-                                      color: AppColor.kSecondaryColor,
-                                    ),
-                                    onPressed: () {
+                                  CustomIconButton(
+                                    icon: Icons.delete,
+                                    tooltip:
+                                    'Click the button to delete student.',
+                                    onTap: () {
                                       showDeleteStudentConfirmationDialog(context,
                                           student, onSubjectSelect.toString());
                                     },
                                   ),
+
                                 ],
                               ))
                             ],

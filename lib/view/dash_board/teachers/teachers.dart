@@ -1,5 +1,6 @@
 import 'package:attendance_admin/constant/app_style/app_colors.dart';
 import 'package:attendance_admin/model/sign_up_model.dart';
+import 'package:attendance_admin/view/dash_board/classes/register/register_new_class_dialog.dart';
 import 'package:attendance_admin/view/dash_board/teachers/register_teacher/register_teacher_dialog.dart';
 import 'package:attendance_admin/view_model/teacher/teacher_controller.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -22,35 +23,38 @@ class _TeachersScreenState extends State<TeachersScreen> {
 
   @override
   Widget build(BuildContext context) {
-    int rowIndex=0;
+    int rowIndex = 0;
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: SingleChildScrollView(
         child: Column(
           children: [
-           Row(
-             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-             children: [
-               Container(
-                 alignment: Alignment.topLeft,
-                 child: Text('Faculty Information',
-                     style: TextStyle(
-                         fontSize: 24,
-                         fontWeight: FontWeight.bold,
-                         color: AppColor.kPrimaryColor)),
-               ),
-               IconButton(onPressed: (){
-                 registerNewTeacherDialog(context);
-               }, icon: Icon(Icons.add_circle,color: AppColor.kSecondaryColor,)),
-             ],
-           ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  alignment: Alignment.topLeft,
+                  child: Text('Faculty Information',
+                      style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: AppColor.kPrimaryColor)),
+                ),
+                IconButton(
+                    onPressed: () {
+                      registerNewTeacherDialog(context);
+                    },
+                    icon: Icon(
+                      Icons.add_circle,
+                      color: AppColor.kSecondaryColor,
+                    )),
+              ],
+            ),
             StreamBuilder<QuerySnapshot>(
               stream: _teacherController.streamTeacherData(),
               builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  EasyLoading.show(
-                    status: 'Loading'
-                  );
+                  EasyLoading.show(status: 'Loading');
                   return Container();
                 } else if (snapshot.hasError) {
                   EasyLoading.dismiss();
@@ -74,10 +78,10 @@ class _TeachersScreenState extends State<TeachersScreen> {
                     child: DataTable(
                       showCheckboxColumn: true,
                       headingRowColor: MaterialStateColor.resolveWith(
-                            (states) => AppColor.kSecondaryColor,
+                        (states) => AppColor.kSecondaryColor,
                       ),
                       dataRowColor: MaterialStateColor.resolveWith(
-                              (states) => AppColor.kWhite),
+                          (states) => AppColor.kWhite),
                       dividerThickness: 2.0,
                       border: TableBorder.all(color: AppColor.kGrey, width: 2),
                       columns: [
@@ -86,7 +90,6 @@ class _TeachersScreenState extends State<TeachersScreen> {
                         _dataColumnText('Gmail'),
                         _dataColumnText('Course Load'),
                         _dataColumnText('Actions'),
-
                       ],
                       rows: snap.map((teacher) {
                         rowIndex++;
@@ -96,27 +99,30 @@ class _TeachersScreenState extends State<TeachersScreen> {
                             _dataCellText(teacher.name),
                             _dataCellText(teacher.email),
                             _dataCellText('5'),
-
                             DataCell(Row(
                               children: [
-                                IconButton(
-                                  icon: const Icon(
-                                    Icons.edit,
-                                    color: AppColor.kSecondaryColor,
-                                  ),
-                                  onPressed: () {
-
-                                  },
+                                CustomIconButton(
+                                  icon: Icons.edit,
+                                  tooltip: 'Click the button to edit teacher.',
+                                  onTap: () {},
                                 ),
-                                IconButton(
-                                  icon: const Icon(
-                                    Icons.delete,
-                                    color: AppColor.kSecondaryColor,
-                                  ),
-                                  onPressed: () {
-
-                                  },
+                                CustomIconButton(
+                                  icon: Icons.delete,
+                                  tooltip:
+                                      'Click the button to delete teacher.',
+                                  onTap: () {},
                                 ),
+                                CustomIconButton(
+                                  icon: Icons.add_circle,
+                                  tooltip: 'Click the button to assign class.',
+                                  color: AppColor.kPrimaryColor,
+                                  onTap: () {
+                                    registerNewClassDialog(
+                                      context,
+                                      teacher.teacherId,
+                                    );
+                                  },
+                                )
                               ],
                             ))
                           ],
@@ -124,8 +130,6 @@ class _TeachersScreenState extends State<TeachersScreen> {
                       }).toList(),
                     ),
                   );
-
-
                 }
               },
             ),
@@ -134,9 +138,9 @@ class _TeachersScreenState extends State<TeachersScreen> {
       ),
     );
   }
+
   DataCell _dataCellText(String title) {
     return DataCell(
-
       Text(
         title,
         overflow: TextOverflow.ellipsis,
@@ -154,7 +158,6 @@ class _TeachersScreenState extends State<TeachersScreen> {
       tooltip: title,
       label: Text(
         title,
-
         style: const TextStyle(
             color: AppColor.kWhite, overflow: TextOverflow.ellipsis),
       ),

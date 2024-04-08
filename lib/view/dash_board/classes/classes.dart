@@ -43,7 +43,7 @@ class _ClassesScreenState extends State<ClassesScreen> {
                 ),
                 IconButton(
                     onPressed: () {
-                      registerNewClassDialog(context);
+
                     },
                     icon: Icon(
                       Icons.add_circle,
@@ -98,35 +98,33 @@ class _ClassesScreenState extends State<ClassesScreen> {
                           _dataCellText("${course.percentage}%"),
                           DataCell(Row(
                             children: [
-                              IconButton(
-                                icon: const Icon(
-                                  Icons.edit,
-                                  color: AppColor.kSecondaryColor,
-                                ),
-                                onPressed: () {
+                              CustomIconButton(
+                                icon: Icons.edit,
+                                tooltip: 'Click the button to edit class.',
+                                onTap: () {
                                   updateClassValueDialog(context, course);
                                 },
                               ),
-                              IconButton(
-                                icon: const Icon(
-                                  Icons.delete,
-                                  color: AppColor.kSecondaryColor,
-                                ),
-                                onPressed: () {
+                              CustomIconButton(
+                                icon: Icons.delete,
+                                tooltip:
+                                'Click the button to delete class.',
+                                onTap: () {
                                   showDeleteClassConfirmationDialog(
                                       context, course);
                                 },
                               ),
-                              IconButton(
-                                icon: const Icon(
-                                  Icons.more_vert,
-                                  color: AppColor.kSecondaryColor,
-                                ),
-                                onPressed: () {
+                              CustomIconButton(
+                                icon:   Icons.more_vert,
+                                tooltip: 'Click to open the import dialog',
+                                color: AppColor.kPrimaryColor,
+                                onTap: () {
                                   showImportDialog(
                                       context, course.subjectId.toString());
                                 },
-                              ),
+                              )
+
+
                             ],
                           ))
                         ],
