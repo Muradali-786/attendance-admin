@@ -65,6 +65,8 @@ class _StudentScreenState extends State<StudentScreen> {
                       onChanged: (String? newValue) {
                         setState(() {
                           onTeacherSelect = newValue;
+                          onSubjectSelect=null;
+
                         });
                       },
                     ),
@@ -73,9 +75,9 @@ class _StudentScreenState extends State<StudentScreen> {
                   Expanded(
                       child: SubjectDropdown(
                     value: onSubjectSelect,
-                    onChanged: (String? newValue) {
+                    onChanged: (String? newVal) {
                       setState(() {
-                        onSubjectSelect = newValue;
+                        onSubjectSelect = newVal;
                       });
                     },
                     teacherId: onTeacherSelect.toString(),

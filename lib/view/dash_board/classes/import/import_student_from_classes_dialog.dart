@@ -67,8 +67,8 @@ Future<void> importStudentFromClassesDialog(
               ),
               Column(
                 children: [
-                  StreamBuilder<QuerySnapshot>(
-                    stream: classController.streamAllClassesData(),
+                  FutureBuilder<QuerySnapshot>(
+                    future: classController.getAllClassesData(),
                     builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                       if (!snapshot.hasData) {
                         return const Center(

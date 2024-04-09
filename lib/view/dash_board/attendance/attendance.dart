@@ -63,6 +63,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
     String currentTime = '$hour:$minute $period';
 
     return Scaffold(
+
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
@@ -89,6 +90,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
                         onChanged: (String? newValue) {
                           setState(() {
                             onTeacherSelect = newValue;
+                            onSubjectSelect=null;
                           });
                         },
                       ),
@@ -104,7 +106,8 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
                         },
                         teacherId: onTeacherSelect.toString(),
                       ),
-                    )
+                    ),
+                    _saveAttendanceButton(currentTime)
                   ],
                 ),
               ),
@@ -167,29 +170,36 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
                                   _dataCellText("${index + 1}"),
                                   _dataCellText(snap[index].studentRollNo),
                                   _dataCellText(snap[index].studentName),
-                                  DataCell(TextButton(
-                                    onPressed: () {
-                                      _selectDate(context);
-                                    },
-                                    child: Text(
-                                      formatDate(date),
-                                      style: AppStyles().defaultStyle(
-                                        18,
-                                        AppColor.kPrimaryColor,
-                                        FontWeight.w400,
+                                  DataCell(Tooltip(
+                                    message: 'Click the button to Change the date',
+                                    child: TextButton(
+                                      onPressed: () {
+                                        _selectDate(context);
+                                      },
+                                      child: Text(
+                                        formatDate(date),
+                                        style: AppStyles().defaultStyle(
+                                          18,
+                                          AppColor.kPrimaryColor,
+                                          FontWeight.w400,
+                                        ),
                                       ),
                                     ),
                                   )),
-                                  DataCell(TextButton(
-                                    onPressed: () {
-                                      _selectTime(context);
-                                    },
-                                    child: Text(
-                                      currentTime.toString(),
-                                      style: AppStyles().defaultStyle(
-                                        18,
-                                        AppColor.kPrimaryColor,
-                                        FontWeight.w400,
+                                  DataCell(Tooltip(
+                                    message: 'Click the button to Change time',
+                                    child: TextButton(
+                                      onPressed: () {
+                                        _selectTime(context);
+                                      },
+
+                                      child: Text(
+                                        currentTime.toString(),
+                                        style: AppStyles().defaultStyle(
+                                          18,
+                                          AppColor.kPrimaryColor,
+                                          FontWeight.w400,
+                                        ),
                                       ),
                                     ),
                                   )),
@@ -217,43 +227,43 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
           ),
         ),
       ),
-      bottomSheet:
-          Consumer<AttendanceController>(builder: (context, provider, child) {
-        return Padding(
-          padding: const EdgeInsets.fromLTRB(0, 0, 0, 16),
-          child: CustomRoundButton(
-            height: 35,
-            title: 'SAVE ATTENDANCE',
-            loading: provider.loading,
-            onPress: () async {
-              if (stdIdList.isNotEmpty && onSubjectSelect.toString() != '') {
-                AttendanceModel attendanceModel = AttendanceModel(
-                  classId: onSubjectSelect!,
-                  selectedDate: date,
-                  currentTime: currentTime,
-                  attendanceList: Map.fromIterables(
-                    stdIdList,
-                    provider.attendanceStatus,
-                  ),
-                );
 
-                await provider
-                    .saveAllStudentAttendance(attendanceModel)
-                    .then((value) {});
-
-                await StudentController().calculateStudentAttendance(
-                  onSubjectSelect!,
-                  stdIdList,
-                );
-              } else {
-                Utils.toastMessage('Please select a subject');
-              }
-            },
-            buttonColor: AppColor.kSecondaryColor,
-          ),
-        );
-      }),
     );
+  }
+  Widget _saveAttendanceButton(currentTime){
+    return Consumer<AttendanceController>(builder: (context, provider, child) {
+      return CustomRoundButton(
+        height: 40,
+        title: 'SAVE ATTENDANCE',
+        loading: provider.loading,
+
+        onPress: () async {
+          if (stdIdList.isNotEmpty && onSubjectSelect.toString() != '') {
+            AttendanceModel attendanceModel = AttendanceModel(
+              classId: onSubjectSelect!,
+              selectedDate: date,
+              currentTime: currentTime,
+              attendanceList: Map.fromIterables(
+                stdIdList,
+                provider.attendanceStatus,
+              ),
+            );
+
+            await provider
+                .saveAllStudentAttendance(attendanceModel)
+                .then((value) {});
+
+            await StudentController().calculateStudentAttendance(
+              onSubjectSelect!,
+              stdIdList,
+            );
+          } else {
+            Utils.toastMessage('Please select a subject');
+          }
+        },
+        buttonColor: AppColor.kPrimaryColor,
+      );
+    });
   }
 
   DataCell _dataCellText(String title) {

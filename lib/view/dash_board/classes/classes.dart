@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import '../../../constant/app_style/app_colors.dart';
 import '../../../utils/component/custom_button.dart';
 import '../../../utils/component/custom_shimmer_effect.dart';
+import '../../../utils/component/std_and_teacher_drop_down.dart';
 
 class ClassesScreen extends StatefulWidget {
   static const String id = '\classesScreen';
@@ -21,6 +22,7 @@ class ClassesScreen extends StatefulWidget {
 
 class _ClassesScreenState extends State<ClassesScreen> {
   final ClassController _controller = ClassController();
+  String? onTeacherSelect;
 
   @override
   Widget build(BuildContext context) {
@@ -42,17 +44,38 @@ class _ClassesScreenState extends State<ClassesScreen> {
                           color: AppColor.kPrimaryColor)),
                 ),
                 IconButton(
-                    onPressed: () {
-
-                    },
+                    onPressed: () {},
                     icon: Icon(
                       Icons.add_circle,
                       color: AppColor.kSecondaryColor,
                     )),
               ],
             ),
-            StreamBuilder<QuerySnapshot>(
-              stream: _controller.streamAllClassesData(),
+            Container(
+              height: 40,
+
+              width: 150,
+              decoration: BoxDecoration(
+                  border: Border.all(color: AppColor.kPrimaryColor)),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TeacherDropdown(
+                      value: onTeacherSelect,
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          onTeacherSelect = newValue;
+                        });
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            FutureBuilder<QuerySnapshot>(
+              future: onTeacherSelect == null
+                  ? _controller.getAllClassesData()
+                  : _controller.getClassesDataByTeacherId(onTeacherSelect!),
               builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return ShimmerLoadingEffect();
@@ -107,15 +130,14 @@ class _ClassesScreenState extends State<ClassesScreen> {
                               ),
                               CustomIconButton(
                                 icon: Icons.delete,
-                                tooltip:
-                                'Click the button to delete class.',
+                                tooltip: 'Click the button to delete class.',
                                 onTap: () {
                                   showDeleteClassConfirmationDialog(
                                       context, course);
                                 },
                               ),
                               CustomIconButton(
-                                icon:   Icons.more_vert,
+                                icon: Icons.more_vert,
                                 tooltip: 'Click to open the import dialog',
                                 color: AppColor.kPrimaryColor,
                                 onTap: () {
@@ -123,8 +145,6 @@ class _ClassesScreenState extends State<ClassesScreen> {
                                       context, course.subjectId.toString());
                                 },
                               )
-
-
                             ],
                           ))
                         ],

@@ -41,6 +41,8 @@ class TeacherDropdown extends StatelessWidget {
               return SignUpModel.fromMap(data);
             }).toList();
             return DropdownButton<String>(
+              dropdownColor: AppColor.kWhite,
+              focusColor: AppColor.kSecondary54Color,
               items: snap.map((SignUpModel model) {
                 return DropdownMenuItem<String>(
                   value: model.teacherId,
@@ -52,7 +54,8 @@ class TeacherDropdown extends StatelessWidget {
               hint: Text('Select a Teacher',
                   style: TextStyle(color: AppColor.kBlack)),
               isExpanded: true,
-              style: TextStyle(color: AppColor.kBlack),
+              style: TextStyle(
+                  color: AppColor.kPrimaryColor, fontWeight: FontWeight.w700),
             );
           }
         },
@@ -80,8 +83,8 @@ class SubjectDropdown extends StatelessWidget {
       decoration: BoxDecoration(
         border: Border.all(color: AppColor.kPrimaryColor),
       ),
-      child: FutureBuilder<QuerySnapshot>(
-        future: ClassController().getClassesDataByTeacherId(teacherId),
+      child: StreamBuilder<QuerySnapshot>(
+        stream: ClassController().streamClassesDataByTeacherId(teacherId),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
@@ -91,12 +94,12 @@ class SubjectDropdown extends StatelessWidget {
             return Center(
               child: Text('Error: ${snapshot.error}'),
             );
-          } else if (snapshot.hasData) {
+          } else if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
             List<ClassInputModel> snap = snapshot.data!.docs.map((doc) {
               Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
               return ClassInputModel.fromMap(data);
             }).toList();
-            value = snap.isNotEmpty ? snap[0].subjectId : null;
+
             return DropdownButton<String>(
               items: snap.map((ClassInputModel model) {
                 return DropdownMenuItem<String>(
@@ -112,7 +115,22 @@ class SubjectDropdown extends StatelessWidget {
               style: TextStyle(color: AppColor.kBlack),
             );
           } else {
-            return Text('Empty');
+            return const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.error,
+                  color: AppColor.kAlertColor,
+                ),
+                SizedBox(width: 7),
+                Text(
+                  'No Classes Available',
+                  style: TextStyle(
+                      fontWeight: FontWeight.w600, color: AppColor.kAlertColor),
+                ),
+              ],
+            );
           }
         },
       ),

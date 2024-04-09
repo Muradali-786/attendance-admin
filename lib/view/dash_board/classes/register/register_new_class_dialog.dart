@@ -203,6 +203,8 @@ Future<void> registerNewClassDialog(BuildContext context,String? teacherId) asyn
                                   batchController.clear();
                                   departmentController.clear();
                                   batchController.clear();
+                                  attendancePercentageController.clear();
+                                  Navigator.pop(context);
                                 },
                               );
                             }
