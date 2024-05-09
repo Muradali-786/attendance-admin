@@ -21,6 +21,8 @@ Future<void> updateClassValueDialog(BuildContext context,ClassInputModel model) 
   TextEditingController attendancePercentageController =
   TextEditingController(text: model.percentage.toString());
   FocusNode attendanceFocus = FocusNode();
+  TextEditingController cHourController = TextEditingController(text: model.creditHour.toString());
+  FocusNode cHourFocus = FocusNode();
 
   await showDialog(
     context: context,
@@ -90,9 +92,9 @@ Future<void> updateClassValueDialog(BuildContext context,ClassInputModel model) 
                               },
                               hint: 'Subject',
                               onValidator: (val) {
-                                if (val.isEmpty) {
+                                if (val.trim().isEmpty) {
                                   return 'Please enter a subject';
-                                } else if (val.length < 3) {
+                                } else if (val.trim().length < 3) {
                                   return 'Subject cannot contain special characters';
                                 } else if (!RegExp(r'^[a-zA-Z0-9 ]+$').hasMatch(val)) {
                                   return 'Subject cannot contain special characters';
@@ -110,9 +112,9 @@ Future<void> updateClassValueDialog(BuildContext context,ClassInputModel model) 
                               },
                               hint: 'Department',
                               onValidator: (val) {
-                                if (val.isEmpty) {
+                                if (val.trim().isEmpty) {
                                   return 'Please enter a department';
-                                } else if (val.length < 2) {
+                                } else if (val.trim().length < 2) {
                                   return 'Subject must be at least 2 characters long';
                                 } else if (!RegExp(r'^[a-zA-Z0-9 ]+$').hasMatch(val)) {
                                   return 'Department cannot contain special characters';
@@ -130,9 +132,9 @@ Future<void> updateClassValueDialog(BuildContext context,ClassInputModel model) 
                               },
                               hint: 'Standard/Batch',
                               onValidator: (val) {
-                                if (val.isEmpty) {
+                                if (val.trim().isEmpty) {
                                   return 'Please enter a Semester/Batch';
-                                } else if (val.length < 4) {
+                                } else if (val.trim().length < 4) {
                                   return 'Semester/Batch must be at least 4 characters long';
                                 } else if (!RegExp(r'^[a-zA-Z0-9 ]+$').hasMatch(val)) {
                                   return 'Semester/Batch cannot contain special characters';
@@ -141,24 +143,51 @@ Future<void> updateClassValueDialog(BuildContext context,ClassInputModel model) 
                                 return null;
                               },
                               keyBoardType: TextInputType.text),
-                          DialogInputTextField(
-                              labelText: 'Attendance Requirement(%)',
-                              myController: attendancePercentageController,
-                              focusNode: attendanceFocus,
-                              onFieldSubmittedValue: (val) {},
-                              hint: 'Attendance Requirement(%)',
-                              onValidator: (val) {
-                                if (val == null || val.isEmpty) {
-                                  return 'Please enter attendance percentage.';
-                                } else if (double.tryParse(val) == null) {
-                                  return 'Please enter a valid number.';
-                                } else if (double.parse(val) >= 100 ||
-                                    double.parse(val) < 10) {
-                                  return 'Enter attendance (10% - 100%)';
-                                }
-                                return null;
-                              },
-                              keyBoardType: TextInputType.number),
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Expanded(child: DialogInputTextField(
+                                  labelText: 'Attendance Requirement(%)',
+                                  myController: attendancePercentageController,
+                                  focusNode: attendanceFocus,
+                                  onFieldSubmittedValue: (val) {},
+                                  hint: 'Attendance Requirement(%)',
+                                  onValidator: (val) {
+                                    if (val == null || val.isEmpty) {
+                                      return 'Please enter attendance percentage.';
+                                    } else if (double.tryParse(val) == null) {
+                                      return 'Please enter a valid number.';
+                                    } else if (double.parse(val) >= 100 ||
+                                        double.parse(val) < 10) {
+                                      return 'Enter attendance (10% - 100%)';
+                                    }
+                                    return null;
+                                  },
+                                  keyBoardType: TextInputType.number),
+                              ),
+                              const SizedBox(width: 5,),
+                              Expanded(
+                                child: DialogInputTextField(
+                                    labelText: 'Credit Hour',
+                                    myController: cHourController,
+                                    focusNode: cHourFocus,
+                                    onFieldSubmittedValue: (val) {
+                                      Utils.onFocusChange(context, cHourFocus, attendanceFocus);
+                                    },
+                                    hint: 'Credit Hour',
+                                    onValidator: (val) {
+                                      if (val.isEmpty) {
+                                        return 'Please enter a credit Hour';
+                                      } else if (val.length != 1 || !(val == '2' || val == '3' || val == '4')) {
+                                        return 'Please Enter 2, 3, or 4';
+                                      }
+                                      return null;
+                                    },
+                                    keyBoardType: TextInputType.number),
+                              ),
+
+                            ],
+                          )
                         ],))
                   ],
                 ),
@@ -187,12 +216,14 @@ Future<void> updateClassValueDialog(BuildContext context,ClassInputModel model) 
                           if (formKey.currentState!.validate()){
                             Navigator.pop(context);
                             ClassInputModel classInputModel = ClassInputModel(
-                              subjectName: subjectController.text,
+                              subjectName: subjectController.text.trim(),
                               teacherId: model.teacherId,
                               subjectId: model.subjectId,
                               totalClasses: model.totalClasses,
-                              departmentName: departmentController.text,
-                              batchName: batchController.text,
+                              departmentName: departmentController.text.trim(),
+                              batchName: batchController.text.trim(),
+                              creditHour: cHourController.text.trim().toString(),
+
                               percentage:
                               int.tryParse(attendancePercentageController.text),
                             );

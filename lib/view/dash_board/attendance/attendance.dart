@@ -1,6 +1,7 @@
 import 'package:attendance_admin/model/student_model.dart';
 import 'package:attendance_admin/utils/component/date_picker.dart';
 import 'package:attendance_admin/view_model/add_students/students_controller.dart';
+import 'package:attendance_admin/view_model/class_input/class_controller.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -9,11 +10,15 @@ import 'package:provider/provider.dart';
 import '../../../constant/app_style/app_colors.dart';
 import '../../../constant/app_style/app_styles.dart';
 import '../../../model/attendance_model.dart';
+import '../../../model/class_model.dart';
 import '../../../utils/component/custom_button.dart';
+import '../../../utils/component/dialoge_boxes/delete_confirmations.dart';
 import '../../../utils/component/std_and_teacher_drop_down.dart';
 import '../../../utils/component/time_picker.dart';
 import '../../../utils/utils.dart';
 import '../../../view_model/attendance/attendance_controller.dart';
+import '../classes/import/import_dialog_box.dart';
+import '../classes/update/updae_class_dialog.dart';
 
 class AttendanceScreen extends StatefulWidget {
   static const String id = '\attendanceScreen';
@@ -24,6 +29,7 @@ class AttendanceScreen extends StatefulWidget {
 }
 
 class _AttendanceScreenState extends State<AttendanceScreen> {
+  final ClassController _classController=ClassController();
   String? onTeacherSelect;
   String? onSubjectSelect;
   List<String> stdIdList = [];
@@ -110,6 +116,69 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
                     _saveAttendanceButton(currentTime)
                   ],
                 ),
+              ),
+              FutureBuilder<QuerySnapshot>(
+                future: onSubjectSelect != null
+                    ? _classController.getSingleClassesData(onSubjectSelect!)
+                    : null,
+                builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Container();
+                  } else if (snapshot.hasError) {
+                    return Container();
+                  } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                    return Container();
+                  } else {
+                    List<ClassInputModel> snap = snapshot.data!.docs.map((doc) {
+                      Map<String, dynamic> data =
+                      doc.data() as Map<String, dynamic>;
+                      return ClassInputModel.fromMap(data);
+                    }).toList();
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text('Subject Information'),
+                        DataTable(
+                          showCheckboxColumn: true,
+                          headingRowColor: MaterialStateColor.resolveWith(
+                                (states) => AppColor.kSecondaryColor,
+                          ),
+                          dataRowColor: MaterialStateColor.resolveWith(
+                                  (states) => AppColor.kWhite),
+                          dividerThickness: 2.0,
+                          border: TableBorder.all(color: AppColor.kGrey, width: 2),
+                          columns: [
+                            _dataColumnText('S.No'),
+                            _dataColumnText('Name'),
+                            _dataColumnText('Batch'),
+                            _dataColumnText('Department'),
+                            _dataColumnText('Class Sum'),
+                            _dataColumnText('Credit-Hrs'),
+                            _dataColumnText('%-Req'),
+
+                          ],
+                          rows: snap.map((course) {
+
+                            return DataRow(
+                              cells: [
+                                _dataCellText('1'),
+                                _dataCellText(course.subjectName.toString()),
+                                _dataCellText(course.batchName.toString()),
+                                _dataCellText(course.departmentName.toString()),
+                                _dataCellText(course.totalClasses.toString()),
+                                _dataCellText(course.creditHour.toString()),
+                                _dataCellText("${course.percentage}%"),
+
+                              ],
+                            );
+                          }).toList(),
+                        ),
+                        Text('Enrolled Student Information'),
+                      ],
+                    );
+                  }
+                },
               ),
               FutureBuilder<QuerySnapshot>(
                 future: StudentController()
@@ -238,7 +307,8 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
         loading: provider.loading,
 
         onPress: () async {
-          if (stdIdList.isNotEmpty && onSubjectSelect.toString() != '') {
+          if (stdIdList.isNotEmpty && onSubjectSelect!=null) {
+
             AttendanceModel attendanceModel = AttendanceModel(
               classId: onSubjectSelect!,
               selectedDate: date,
@@ -258,6 +328,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
               stdIdList,
             );
           } else {
+
             Utils.toastMessage('Please select a subject');
           }
         },

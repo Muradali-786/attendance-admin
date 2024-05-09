@@ -5,6 +5,7 @@ class ClassInputModel {
   final String? departmentName;
   final String? batchName;
   final int? percentage;
+  final String creditHour;
   final int totalClasses;
 
   ClassInputModel({
@@ -14,6 +15,7 @@ class ClassInputModel {
     required this.teacherId,
     required this.departmentName,
     required this.batchName,
+    required this.creditHour,
     required this.percentage,
   });
   ClassInputModel.fromMap(Map<dynamic, dynamic> res)
@@ -23,6 +25,8 @@ class ClassInputModel {
         departmentName = res['departmentName'],
         batchName = res['batchName'],
         percentage = res['percentage'],
+        creditHour=res['creditHour'],
+
         totalClasses = res['totalClasses'] ?? 0;
 
   Map<String, Object?> toMap() {
@@ -33,6 +37,7 @@ class ClassInputModel {
       'departmentName': departmentName,
       'batchName': batchName,
       'percentage': percentage,
+      'creditHour':creditHour,
       'totalClasses': totalClasses,
     };
   }

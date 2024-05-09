@@ -88,7 +88,8 @@ class _TeachersScreenState extends State<TeachersScreen> {
                         _dataColumnText('S.No'),
                         _dataColumnText('Name'),
                         _dataColumnText('Gmail'),
-                        _dataColumnText('Course Load'),
+                        _dataColumnText('Subjects'),
+                        _dataColumnText('Credit Sum'),
                         _dataColumnText('Actions'),
                       ],
                       rows: snap.map((teacher) {
@@ -98,7 +99,8 @@ class _TeachersScreenState extends State<TeachersScreen> {
                             _dataCellText(rowIndex.toString()),
                             _dataCellText(teacher.name),
                             _dataCellText(teacher.email),
-                            _dataCellText('5'),
+                            _dataCellText(teacher.courseLoad),
+                            _dataCellText(teacher.totalCreditHour),
                             DataCell(Row(
                               children: [
                                 CustomIconButton(

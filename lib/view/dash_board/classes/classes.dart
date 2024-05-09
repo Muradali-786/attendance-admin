@@ -1,12 +1,12 @@
 import 'package:attendance_admin/model/class_model.dart';
+import 'package:attendance_admin/model/sign_up_model.dart';
 import 'package:attendance_admin/utils/component/dialoge_boxes/delete_confirmations.dart';
 import 'package:attendance_admin/view/dash_board/classes/import/import_dialog_box.dart';
-import 'package:attendance_admin/view/dash_board/classes/register/register_new_class_dialog.dart';
 import 'package:attendance_admin/view/dash_board/classes/update/updae_class_dialog.dart';
 import 'package:attendance_admin/view_model/class_input/class_controller.dart';
+import 'package:attendance_admin/view_model/teacher/teacher_controller.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-
 import '../../../constant/app_style/app_colors.dart';
 import '../../../utils/component/custom_button.dart';
 import '../../../utils/component/custom_shimmer_effect.dart';
@@ -22,6 +22,7 @@ class ClassesScreen extends StatefulWidget {
 
 class _ClassesScreenState extends State<ClassesScreen> {
   final ClassController _controller = ClassController();
+  final TeacherController _teacherController = TeacherController();
   String? onTeacherSelect;
 
   @override
@@ -31,6 +32,8 @@ class _ClassesScreenState extends State<ClassesScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: SingleChildScrollView(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -53,7 +56,6 @@ class _ClassesScreenState extends State<ClassesScreen> {
             ),
             Container(
               height: 40,
-
               width: 150,
               decoration: BoxDecoration(
                   border: Border.all(color: AppColor.kPrimaryColor)),
@@ -71,6 +73,77 @@ class _ClassesScreenState extends State<ClassesScreen> {
                   ),
                 ],
               ),
+            ),
+
+
+            FutureBuilder<QuerySnapshot>(
+              future: onTeacherSelect != null
+                  ? _teacherController.getSingleTeacherData(onTeacherSelect!)
+                  : null,
+              builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Container();
+                } else if (snapshot.hasError) {
+                  return Container();
+                } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                  return Container();
+                } else {
+                  List<SignUpModel> snap = snapshot.data!.docs.map((doc) {
+                    Map<String, dynamic> data =
+                        doc.data() as Map<String, dynamic>;
+                    return SignUpModel.fromMap(data);
+                  }).toList();
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text('Teacher Information'),
+                      DataTable(
+                        showCheckboxColumn: true,
+                        headingRowColor: MaterialStateColor.resolveWith(
+                          (states) => AppColor.kSecondaryColor,
+                        ),
+                        dataRowColor: MaterialStateColor.resolveWith(
+                            (states) => AppColor.kWhite),
+                        dividerThickness: 2.0,
+                        border: TableBorder.all(color: AppColor.kGrey, width: 2),
+                        columns: [
+                          _dataColumnText('S.No'),
+                          _dataColumnText('Name'),
+                          _dataColumnText('Gmail'),
+                          _dataColumnText('Subjects'),
+                          _dataColumnText('Credit Sum'),
+                          _dataColumnText('Actions'),
+                        ],
+                        rows: snap.map((teacher) {
+                          rowIndex++;
+                          return DataRow(
+                            cells: [
+                              _dataCellText(rowIndex.toString()),
+                              _dataCellText(teacher.name.toString()),
+                              _dataCellText(teacher.email.toString()),
+                              _dataCellText(teacher.courseLoad),
+                              _dataCellText(teacher.totalCreditHour),
+
+                              DataCell(Row(
+                                children: [
+                                  CustomIconButton(
+                                    icon: Icons.more_vert,
+                                    tooltip: 'Click to open the import dialog',
+                                    color: AppColor.kPrimaryColor,
+                                    onTap: () {},
+                                  )
+                                ],
+                              ))
+                            ],
+                          );
+                        }).toList(),
+                      ),
+                      Text('Assigned Subject Information'),
+                    ],
+                  );
+                }
+              },
             ),
             FutureBuilder<QuerySnapshot>(
               future: onTeacherSelect == null
@@ -105,8 +178,8 @@ class _ClassesScreenState extends State<ClassesScreen> {
                       _dataColumnText('Name'),
                       _dataColumnText('Batch'),
                       _dataColumnText('Department'),
-                      _dataColumnText('Course Load'),
-                      _dataColumnText('Req %'),
+                      _dataColumnText('Class Sum'),
+                      _dataColumnText('Credit-Hrs'),
                       _dataColumnText('Actions'),
                     ],
                     rows: snap.map((course) {
@@ -118,7 +191,7 @@ class _ClassesScreenState extends State<ClassesScreen> {
                           _dataCellText(course.batchName.toString()),
                           _dataCellText(course.departmentName.toString()),
                           _dataCellText(course.totalClasses.toString()),
-                          _dataCellText("${course.percentage}%"),
+                          _dataCellText(course.creditHour.toString()),
                           DataCell(Row(
                             children: [
                               CustomIconButton(

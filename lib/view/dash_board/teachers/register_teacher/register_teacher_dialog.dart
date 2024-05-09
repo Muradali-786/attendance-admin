@@ -88,9 +88,9 @@ Future<void> registerNewTeacherDialog(BuildContext context) async {
                                 },
                                 hint: 'Name',
                                 onValidator: (value) {
-                                  if (value.isEmpty) {
+                                  if (value.trim().isEmpty) {
                                     return 'Please enter your name';
-                                  } else if (value.length < 3) {
+                                  } else if (value.trim().length < 3) {
                                     return 'Name must be at least 3 characters long';
                                   } else if (!RegExp(r'^[a-zA-Z ]+$')
                                       .hasMatch(value)) {
@@ -131,13 +131,11 @@ Future<void> registerNewTeacherDialog(BuildContext context) async {
                                 },
                                 hint: 'Password',
                                 onValidator: (value) {
-                                  if (value.isEmpty) {
+                                  if (value.trim().isEmpty) {
                                     return 'Please enter your password';
-                                  } else if (value.length < 6) {
+                                  } else if (value.trim().length < 6) {
                                     return 'Password must be at least 6 characters long';
                                   }
-
-                                  return null;
 
                                   return null;
                                 },
@@ -149,10 +147,10 @@ Future<void> registerNewTeacherDialog(BuildContext context) async {
                                 onFieldSubmittedValue: (val) {},
                                 hint: 'Confirm Password',
                                 onValidator: (value) {
-                                  if (value.isEmpty) {
+                                  if (value.trim().isEmpty) {
                                     return 'Please confirm your password';
-                                  } else if (value !=
-                                      pasController.value.text) {
+                                  } else if (value.trim() !=
+                                      pasController.value.text.trim()) {
                                     return 'Please enter same Password';
                                   }
 
@@ -189,14 +187,14 @@ Future<void> registerNewTeacherDialog(BuildContext context) async {
                           onPress: () async {
                             if (formKey.currentState!.validate()) {
                               SignUpModel signUpModel = SignUpModel(
-                                name: nameController.text,
-                                email: emailController.text,
+                                name: nameController.text.trim(),
+                                email: emailController.text.trim(),
                               );
 
                               await provider
                                   .registerTeacher(
                                 signUpModel,
-                                pasController.text,
+                                pasController.text.trim(),
                               )
                                   .then((value) {
                                 nameController.clear();

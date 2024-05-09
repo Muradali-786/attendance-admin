@@ -31,7 +31,8 @@ Future<void> showDeleteClassConfirmationDialog(
             onPressed: () async {
               Navigator.of(context).pop();
 
-              await ClassController().deleteClass(model.subjectId.toString());
+              await ClassController().deleteClass(
+                  model.subjectId.toString(), model.teacherId.toString());
             },
             child: const Text("DELETE",
                 style: TextStyle(color: AppColor.kSecondaryColor)),

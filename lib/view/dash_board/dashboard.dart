@@ -72,49 +72,4 @@ class DashboardScreen extends StatelessWidget {
 
 
 
-class ProfileManagementScreen extends StatefulWidget {
-  static const String id = '\ProfileManagementScreen';
-
-  const ProfileManagementScreen({super.key});
-
-  @override
-  State<ProfileManagementScreen> createState() => _ProfileManagementScreenState();
-}
-
-class _ProfileManagementScreenState extends State<ProfileManagementScreen> {
-
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                alignment: Alignment.topLeft,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Manage Profile',
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
 

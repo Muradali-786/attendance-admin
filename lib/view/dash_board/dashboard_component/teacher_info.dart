@@ -71,7 +71,7 @@ class _TeacherInformationState extends State<TeacherInformation> {
                       ),
                       DataColumn(
                         label: Text(
-                          "Last Active",
+                          "C-Load",
                           style: TextStyle(color: Colors.white),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -112,7 +112,7 @@ class _TeacherInformationState extends State<TeacherInformation> {
         ),
         DataColumn(
           label: Text(
-            "Last Active",
+            "C-Load",
             style: TextStyle(color: Colors.white),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
@@ -176,10 +176,12 @@ DataRow teacherInfoRow(SignUpModel model) {
         model.email,
         style: TextStyle(color: AppColor.kWhite),
       )),
-      DataCell(Text(
-        '12:00 PM',
-        style: TextStyle(color: AppColor.kWhite),
-      )),
+      DataCell(
+
+          Text(
+                  "0${model.courseLoad}",
+                  style: TextStyle(color: AppColor.kWhite),
+                )),
     ],
   );
 }

@@ -1,4 +1,5 @@
 import 'package:attendance_admin/constant/app_style/app_colors.dart';
+import 'package:attendance_admin/view/dash_board/Reports/reports.dart';
 import 'package:attendance_admin/view/dash_board/attendance/attendance.dart';
 import 'package:attendance_admin/view/dash_board/classes/classes.dart';
 import 'package:attendance_admin/view/dash_board/setting/setting.dart';
@@ -55,9 +56,9 @@ class _SideMenuState extends State<SideMenu> {
 
         break;
 
-      case ProfileManagementScreen.id:
+      case Reports.id:
         setState(() {
-          _selectedScreen = ProfileManagementScreen();
+          _selectedScreen = Reports();
         });
 
         break;
@@ -125,9 +126,9 @@ class _SideMenuState extends State<SideMenu> {
           ),
 
           AdminMenuItem(
-            title: 'Profile Management',
+            title: 'Reports',
             icon: Icons.manage_accounts,
-            route: ProfileManagementScreen.id,
+            route: Reports.id,
           ),
 
           AdminMenuItem(

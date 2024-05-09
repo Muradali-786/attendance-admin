@@ -7,11 +7,9 @@ import '../../utils/utils.dart';
 
 const TEACHER = 'Teachers';
 
-class TeacherController with ChangeNotifier{
+class TeacherController with ChangeNotifier {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
-
-
 
   bool _loading = false;
   get loading => _loading;
@@ -29,20 +27,23 @@ class TeacherController with ChangeNotifier{
     return _firestore.collection(TEACHER).get();
   }
 
-  Future<void> deleteTeacherData() async{
-    dynamic data =await _auth.userChanges().toList();
-
-
+  Future<QuerySnapshot> getSingleTeacherData(String teacherId) {
+    return _firestore
+        .collection(TEACHER)
+        .where('teacherId', isEqualTo: teacherId)
+        .get();
   }
 
-
+  Future<void> deleteTeacherData() async {
+    dynamic data = await _auth.userChanges().toList();
+  }
 
   Future<void> registerTeacher(SignUpModel signUpModel, String password) async {
     setLoading(true);
     try {
       await _auth
           .createUserWithEmailAndPassword(
-          email: signUpModel.email, password: password)
+              email: signUpModel.email, password: password)
           .then((e) {
         signUpModel.teacherId = e.user!.uid;
         saveTeacherData(signUpModel).then((value) {
