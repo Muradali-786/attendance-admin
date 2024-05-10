@@ -12,6 +12,8 @@ import '../../../constant/app_style/app_colors.dart';
 import '../../../model/sign_up_model.dart';
 import '../../../utils/component/custom_button.dart';
 import '../../../utils/component/std_and_teacher_drop_down.dart';
+import '../classes/import/import_dialog_box.dart';
+import '../classes/update/updae_class_dialog.dart';
 
 class StudentScreen extends StatefulWidget {
   static const String id = '\studentsScreen';
@@ -24,6 +26,7 @@ class StudentScreen extends StatefulWidget {
 class _StudentScreenState extends State<StudentScreen> {
   String? onTeacherSelect;
   String? onSubjectSelect;
+  final ClassController _classController=ClassController();
 
   @override
   Widget build(BuildContext context) {
@@ -84,6 +87,96 @@ class _StudentScreenState extends State<StudentScreen> {
                   ))
                 ],
               ),
+            ),
+            FutureBuilder<QuerySnapshot>(
+              future: onSubjectSelect != null
+                  ? _classController.getSingleClassesData(onSubjectSelect!)
+                  : null,
+              builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Container();
+                } else if (snapshot.hasError) {
+                  return Container();
+                } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                  return Container();
+                } else {
+                  List<ClassInputModel> snap = snapshot.data!.docs.map((doc) {
+                    Map<String, dynamic> data =
+                    doc.data() as Map<String, dynamic>;
+                    return ClassInputModel.fromMap(data);
+                  }).toList();
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text('Subject Information'),
+                      DataTable(
+                        showCheckboxColumn: true,
+                        headingRowColor: MaterialStateColor.resolveWith(
+                              (states) => AppColor.kSecondaryColor,
+                        ),
+                        dataRowColor: MaterialStateColor.resolveWith(
+                                (states) => AppColor.kWhite),
+                        dividerThickness: 2.0,
+                        border: TableBorder.all(color: AppColor.kGrey, width: 2),
+                        columns: [
+                          _dataColumnText('S.No'),
+                          _dataColumnText('Name'),
+                          _dataColumnText('Batch'),
+                          _dataColumnText('Department'),
+                          _dataColumnText('Class Sum'),
+                          _dataColumnText('Credit-Hrs'),
+                          _dataColumnText('Action'),
+
+                        ],
+                        rows: snap.map((course) {
+
+                          return DataRow(
+                            cells: [
+                              _dataCellText('1'),
+                              _dataCellText(course.subjectName.toString()),
+                              _dataCellText(course.batchName.toString()),
+                              _dataCellText(course.departmentName.toString()),
+                              _dataCellText(course.totalClasses.toString()),
+                              _dataCellText(course.creditHour.toString()),
+                              DataCell(Row(
+                                children: [
+                                  CustomIconButton(
+                                    icon: Icons.edit,
+                                    tooltip: 'Click the button to edit class.',
+                                    onTap: () {
+                                      updateClassValueDialog(context, course);
+                                    },
+                                  ),
+                                  CustomIconButton(
+                                    icon: Icons.delete,
+                                    tooltip: 'Click the button to delete class.',
+                                    onTap: () {
+                                      showDeleteClassConfirmationDialog(
+                                          context, course);
+                                    },
+                                  ),
+                                  CustomIconButton(
+                                    icon: Icons.more_vert,
+                                    tooltip: 'Click to open the import dialog',
+                                    color: AppColor.kPrimaryColor,
+                                    onTap: () {
+                                      showImportDialog(
+                                          context, course.subjectId.toString());
+                                    },
+                                  )
+                                ],
+                              ))
+
+                            ],
+                          );
+                        }).toList(),
+                      ),
+                      Text('Enrolled Student Information'),
+                    ],
+                  );
+                }
+              },
             ),
             FutureBuilder<QuerySnapshot>(
               future: StudentController()

@@ -1,5 +1,6 @@
 import 'package:attendance_admin/constant/app_style/app_colors.dart';
 import 'package:attendance_admin/model/sign_up_model.dart';
+import 'package:attendance_admin/utils/component/dialoge_boxes/update_teacher_profile_dialog.dart';
 import 'package:attendance_admin/view/dash_board/classes/register/register_new_class_dialog.dart';
 import 'package:attendance_admin/view/dash_board/teachers/register_teacher/register_teacher_dialog.dart';
 import 'package:attendance_admin/view_model/teacher/teacher_controller.dart';
@@ -90,6 +91,7 @@ class _TeachersScreenState extends State<TeachersScreen> {
                         _dataColumnText('Gmail'),
                         _dataColumnText('Subjects'),
                         _dataColumnText('Credit Sum'),
+                        _dataColumnText('Status'),
                         _dataColumnText('Actions'),
                       ],
                       rows: snap.map((teacher) {
@@ -101,18 +103,15 @@ class _TeachersScreenState extends State<TeachersScreen> {
                             _dataCellText(teacher.email),
                             _dataCellText(teacher.courseLoad),
                             _dataCellText(teacher.totalCreditHour),
+                            _dataCellText('Accept'),
                             DataCell(Row(
                               children: [
                                 CustomIconButton(
                                   icon: Icons.edit,
                                   tooltip: 'Click the button to edit teacher.',
-                                  onTap: () {},
-                                ),
-                                CustomIconButton(
-                                  icon: Icons.delete,
-                                  tooltip:
-                                      'Click the button to delete teacher.',
-                                  onTap: () {},
+                                  onTap: () {
+                                    updateTeacherProfileDialog(context, teacher.teacherId.toString(), teacher.name);
+                                  },
                                 ),
                                 CustomIconButton(
                                   icon: Icons.add_circle,

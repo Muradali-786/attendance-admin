@@ -155,7 +155,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
                             _dataColumnText('Department'),
                             _dataColumnText('Class Sum'),
                             _dataColumnText('Credit-Hrs'),
-                            _dataColumnText('%-Req'),
+                            _dataColumnText('Action'),
 
                           ],
                           rows: snap.map((course) {
@@ -168,7 +168,34 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
                                 _dataCellText(course.departmentName.toString()),
                                 _dataCellText(course.totalClasses.toString()),
                                 _dataCellText(course.creditHour.toString()),
-                                _dataCellText("${course.percentage}%"),
+                                DataCell(Row(
+                                  children: [
+                                    CustomIconButton(
+                                      icon: Icons.edit,
+                                      tooltip: 'Click the button to edit class.',
+                                      onTap: () {
+                                        updateClassValueDialog(context, course);
+                                      },
+                                    ),
+                                    CustomIconButton(
+                                      icon: Icons.delete,
+                                      tooltip: 'Click the button to delete class.',
+                                      onTap: () {
+                                        showDeleteClassConfirmationDialog(
+                                            context, course);
+                                      },
+                                    ),
+                                    CustomIconButton(
+                                      icon: Icons.more_vert,
+                                      tooltip: 'Click to open the import dialog',
+                                      color: AppColor.kPrimaryColor,
+                                      onTap: () {
+                                        showImportDialog(
+                                            context, course.subjectId.toString());
+                                      },
+                                    )
+                                  ],
+                                ))
 
                               ],
                             );

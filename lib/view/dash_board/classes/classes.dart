@@ -2,6 +2,7 @@ import 'package:attendance_admin/model/class_model.dart';
 import 'package:attendance_admin/model/sign_up_model.dart';
 import 'package:attendance_admin/utils/component/dialoge_boxes/delete_confirmations.dart';
 import 'package:attendance_admin/view/dash_board/classes/import/import_dialog_box.dart';
+import 'package:attendance_admin/view/dash_board/classes/register/register_new_class_dialog.dart';
 import 'package:attendance_admin/view/dash_board/classes/update/updae_class_dialog.dart';
 import 'package:attendance_admin/view_model/class_input/class_controller.dart';
 import 'package:attendance_admin/view_model/teacher/teacher_controller.dart';
@@ -128,10 +129,20 @@ class _ClassesScreenState extends State<ClassesScreen> {
                               DataCell(Row(
                                 children: [
                                   CustomIconButton(
-                                    icon: Icons.more_vert,
-                                    tooltip: 'Click to open the import dialog',
-                                    color: AppColor.kPrimaryColor,
+                                    icon: Icons.edit,
+                                    tooltip: 'Click the button to edit teacher.',
                                     onTap: () {},
+                                  ),
+                                  CustomIconButton(
+                                    icon: Icons.add_circle,
+                                    tooltip: 'Click the button to assign class.',
+                                    color: AppColor.kPrimaryColor,
+                                    onTap: () {
+                                      registerNewClassDialog(
+                                        context,
+                                        teacher.teacherId,
+                                      );
+                                    },
                                   )
                                 ],
                               ))
