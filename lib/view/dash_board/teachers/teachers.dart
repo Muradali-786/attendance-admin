@@ -1,5 +1,6 @@
 import 'package:attendance_admin/constant/app_style/app_colors.dart';
 import 'package:attendance_admin/model/sign_up_model.dart';
+import 'package:attendance_admin/utils/component/dialoge_boxes/delete_confirmations.dart';
 import 'package:attendance_admin/utils/component/dialoge_boxes/update_teacher_profile_dialog.dart';
 import 'package:attendance_admin/view/dash_board/classes/register/register_new_class_dialog.dart';
 import 'package:attendance_admin/view/dash_board/teachers/register_teacher/register_teacher_dialog.dart';
@@ -103,14 +104,34 @@ class _TeachersScreenState extends State<TeachersScreen> {
                             _dataCellText(teacher.email),
                             _dataCellText(teacher.courseLoad),
                             _dataCellText(teacher.totalCreditHour),
-                            _dataCellText('Accept'),
+                            DataCell(Tooltip(
+                              message: 'Click the button to Change the Status',
+                              child: TextButton(
+
+                                  onPressed: () {
+                                    bool newStatus=teacher.status;
+                                    newStatus=!newStatus;
+
+                                    changeStatusConfirmationDialog(context, teacher.teacherId!, newStatus);
+
+                                  },
+
+                                  child: Text(teacher.status ? 'Approved' : 'Declined',
+                                      style: TextStyle(
+                                          color: teacher.status ?AppColor.kPrimaryColor:AppColor.kAlertColor,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w500))),
+                            )),
                             DataCell(Row(
                               children: [
                                 CustomIconButton(
                                   icon: Icons.edit,
                                   tooltip: 'Click the button to edit teacher.',
                                   onTap: () {
-                                    updateTeacherProfileDialog(context, teacher.teacherId.toString(), teacher.name);
+                                    updateTeacherProfileDialog(
+                                        context,
+                                        teacher.teacherId.toString(),
+                                        teacher.name);
                                   },
                                 ),
                                 CustomIconButton(

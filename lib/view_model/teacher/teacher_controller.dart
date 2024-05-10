@@ -66,6 +66,16 @@ class TeacherController with ChangeNotifier {
       Utils.toastMessage('Error While updating Profile');
     });
   }
+  Future<void> updateTeacherStatus(String teacherId, bool newStatus) async {
+    try {
+      await _firestore.collection(TEACHER).doc(teacherId).update({
+        'status': newStatus,
+      });
+      Utils.toastMessage('Status updated successfully');
+    } catch (e) {
+      Utils.toastMessage('Failed to update status');
+    }
+  }
 
   Future<void> saveTeacherData(SignUpModel signUpModel) async {
     try {

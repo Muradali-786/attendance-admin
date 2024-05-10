@@ -1,3 +1,4 @@
+import 'package:attendance_admin/view_model/teacher/teacher_controller.dart';
 import 'package:flutter/material.dart';
 
 import '../../../constant/app_style/app_colors.dart';
@@ -118,3 +119,41 @@ Future<void> showDeleteAttendanceConfirmationDialog(
     },
   );
 }
+Future<void> changeStatusConfirmationDialog(
+    BuildContext context, String teacherId, bool newStatus) async {
+  String statusText = newStatus ? "activate" : "deactivate";
+  String titleText = newStatus ? "Activate Account" : "Deactivate Account";
+
+  return showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: Text(titleText),
+        content: Text(
+            "Are you sure you want to $statusText this account?"),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text(
+              "CANCEL",
+              style: TextStyle(color: AppColor.kSecondaryColor),
+            ),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.pop(context);
+              await TeacherController().updateTeacherStatus(teacherId, newStatus);
+            },
+            child: Text(
+              statusText.toUpperCase(),
+              style: const TextStyle(color: AppColor.kSecondaryColor),
+            ),
+          ),
+        ],
+      );
+    },
+  );
+}
+
