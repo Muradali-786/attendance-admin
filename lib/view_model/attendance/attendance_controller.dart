@@ -1,9 +1,9 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import '../../constant/app_style/app_styles.dart';
 import '../../model/attendance_model.dart';
+import '../../model/attendance_report_model.dart';
 import '../../utils/utils.dart';
 
 class AttendanceController extends ChangeNotifier {
@@ -105,21 +105,71 @@ class AttendanceController extends ChangeNotifier {
     return _fireStore
         .collection(CLASS)
         .doc(subjectId)
-        .collection(ATTENDANCE).orderBy('selectedDate',descending: false)
+        .collection(ATTENDANCE)
+        .orderBy('selectedDate', descending: false)
         .snapshots();
   }
+
   Future<QuerySnapshot> fetchAllAttendanceRecord(String subjectId) {
     return _fireStore
         .collection(CLASS)
         .doc(subjectId)
-        .collection(ATTENDANCE).orderBy('selectedDate',descending: false)
+        .collection(ATTENDANCE)
+        .orderBy('selectedDate', descending: false)
         .get();
   }
-  Stream<QuerySnapshot> getAllStudentAttendanceBySelectedDate(String subjectId,DateTime date) {
+
+  Future<List<AttendanceReportModel>> getAllAttendanceReportBySubject(String subjectId) async {
+    List<AttendanceReportModel> attendanceRecord = [];
+    QuerySnapshot studentSnapshot = await _fireStore
+        .collection(CLASS)
+        .doc(subjectId)
+        .collection(STUDENT)
+        .get();
+    QuerySnapshot attendanceSnapshot = await _fireStore
+        .collection(CLASS)
+        .doc(subjectId)
+        .collection(ATTENDANCE)
+        .get();
+
+    for (dynamic std in studentSnapshot.docs) {
+      String studentId = std['studentId'];
+      String studentName = std['studentName'];
+      String studentRollNo = std['studentRollNo'];
+      int percentage = std['attendancePercentage'];
+      List<String> attendanceList = [];
+      List<Timestamp> dateList = [];
+
+      for (dynamic record in attendanceSnapshot.docs) {
+        dateList.add(record['selectedDate']);
+
+        if (record['attendanceList'].containsKey(studentId)) {
+          attendanceList.add(record['attendanceList'][studentId]);
+        } else {
+          attendanceList.add('N/A');
+        }
+      }
+
+      AttendanceReportModel studentAttendance = AttendanceReportModel(
+          studentId: studentId,
+          studentName: studentName,
+          studentRollNo: studentRollNo,
+          attendanceList: attendanceList,
+          dates: dateList,
+          percentage: percentage);
+
+      attendanceRecord.add(studentAttendance);
+    }
+    return attendanceRecord;
+  }
+
+  Stream<QuerySnapshot> getAllStudentAttendanceBySelectedDate(
+      String subjectId, DateTime date) {
     return _fireStore
         .collection(CLASS)
         .doc(subjectId)
-        .collection(ATTENDANCE).where('selectedDate',isEqualTo:date)
+        .collection(ATTENDANCE)
+        .where('selectedDate', isEqualTo: date)
         .snapshots();
   }
 
@@ -127,7 +177,8 @@ class AttendanceController extends ChangeNotifier {
     return _fireStore
         .collection(CLASS)
         .doc(subjectId)
-        .collection(ATTENDANCE).orderBy('selectedDate',descending: false)
+        .collection(ATTENDANCE)
+        .orderBy('selectedDate', descending: false)
         .get();
   }
 
@@ -142,7 +193,7 @@ class AttendanceController extends ChangeNotifier {
 
   Future<int> getAttendanceCount(String classId) async {
     final attendanceCollection =
-    _fireStore.collection(CLASS).doc(classId).collection(ATTENDANCE);
+        _fireStore.collection(CLASS).doc(classId).collection(ATTENDANCE);
     final querySnapshot = await attendanceCollection.get();
 
     return querySnapshot.docs.length;
@@ -184,3 +235,4 @@ class AttendanceController extends ChangeNotifier {
     notifyListeners();
   }
 }
+

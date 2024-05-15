@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 
 import '../../constant/app_style/app_styles.dart';
 import '../../model/attendance_model.dart';
-import '../../model/print_std_model.dart';
+import '../../model/single_std_info_model.dart';
 import '../../model/student_model.dart';
 import '../../utils/utils.dart';
 import '../attendance/attendance_controller.dart';
@@ -176,7 +176,7 @@ class StudentController with ChangeNotifier {
     List<OneStudentInfoModel> studentInfoList = [];
 
     QuerySnapshot classSnapshots =
-        await FirebaseFirestore.instance.collection(CLASS).get();
+        await _fireStore.collection(CLASS).get();
 
     for (QueryDocumentSnapshot classDoc in classSnapshots.docs) {
       QuerySnapshot studentSnapshots = await classDoc.reference
