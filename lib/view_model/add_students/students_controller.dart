@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 
 import '../../constant/app_style/app_styles.dart';
 import '../../model/attendance_model.dart';
+import '../../model/print_std_model.dart';
 import '../../model/student_model.dart';
 import '../../utils/utils.dart';
 import '../attendance/attendance_controller.dart';
@@ -167,14 +168,45 @@ class StudentController with ChangeNotifier {
   }
 
   Future<QuerySnapshot> getAllStudentCountOfOneClass(String classId) {
-    return _fireStore
-        .collection(CLASS)
-        .doc(classId)
-        .collection(STUDENT)
-        .get();
+    return _fireStore.collection(CLASS).doc(classId).collection(STUDENT).get();
   }
 
+  Future<List<OneStudentInfoModel>> getStudentsDetailsInAllSubject(
+      String rollNo) async {
+    List<OneStudentInfoModel> studentInfoList = [];
 
+    QuerySnapshot classSnapshots =
+        await FirebaseFirestore.instance.collection(CLASS).get();
+
+    for (QueryDocumentSnapshot classDoc in classSnapshots.docs) {
+      QuerySnapshot studentSnapshots = await classDoc.reference
+          .collection(STUDENT)
+          .where('studentRollNo', isEqualTo: rollNo)
+          .get();
+
+      for (QueryDocumentSnapshot studentDoc in studentSnapshots.docs) {
+        // Check if student data is present
+        Map classData = classDoc.data() as Map;
+        if (studentDoc.exists) {
+          OneStudentInfoModel printModel = OneStudentInfoModel(
+            subjectName: classData['subjectName'],
+            classId: classDoc.id,
+            studentId: studentDoc.id,
+            studentName: studentDoc['studentName'],
+            studentRollNo: studentDoc['studentRollNo'],
+            totalClasses: classData['totalClasses'],
+            attendancePercentage: studentDoc['attendancePercentage'],
+            totalPresent: studentDoc['totalPresent'],
+            totalAbsent: studentDoc['totalAbsent'],
+            totalLeaves: studentDoc['totalLeaves'],
+          );
+          studentInfoList.add(printModel);
+        }
+      }
+    }
+
+    return studentInfoList;
+  }
 
   Future<void> addListOfStudent(
     String classId,
@@ -289,11 +321,7 @@ class StudentController with ChangeNotifier {
   }
 
   Future<QuerySnapshot> getAllStudentDataByClassId(String classId) {
-    return _fireStore
-        .collection(CLASS)
-        .doc(classId)
-        .collection(STUDENT)
-        .get();
+    return _fireStore.collection(CLASS).doc(classId).collection(STUDENT).get();
   }
 
   Future<dynamic> getStudentDataToExport(String classId) {
