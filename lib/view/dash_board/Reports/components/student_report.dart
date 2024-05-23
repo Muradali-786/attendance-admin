@@ -1,9 +1,10 @@
+import 'package:attendance_admin/utils/component/custom_button.dart';
+import 'package:attendance_admin/utils/component/dialog_text_field.dart';
+import 'package:attendance_admin/utils/utils.dart';
 import 'package:flutter/material.dart';
 import '../../../../constant/app_style/app_colors.dart';
 import '../../../../model/single_std_info_model.dart';
 import '../../../../view_model/add_students/students_controller.dart';
-
-
 
 class StudentReport extends StatefulWidget {
   const StudentReport({super.key});
@@ -13,20 +14,62 @@ class StudentReport extends StatefulWidget {
 }
 
 class _StudentReportState extends State<StudentReport> {
+  TextEditingController searchController = TextEditingController();
+  FocusNode searchFocus = FocusNode();
   int index = 0;
+  String name = '';
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Expanded(
+              flex: 3,
+              child: DialogInputTextField(
+                myController: searchController,
+                focusNode: searchFocus,
+                onFieldSubmittedValue: (val) {},
+                hint: 'Enter Student Roll Number',
+                labelText: 'Enter Student Roll Number',
+                onValidator: (v) {},
+                keyBoardType: TextInputType.text,
+              ),
+            ),
+            Expanded(
+              child: CustomRoundButton(
+                  height: 45,
+                  title: 'Search',
+                  onPress: () {
+
+                    if(searchController.text.isNotEmpty && searchController.text.trim()!=name ){
+
+                      setState(() {
+                        name=searchController.text.trim();
+                      });
+                    }else{
+                      Utils.toastMessage('Record already displayed.');
+                      Utils.toastMessage('Please change the Roll No to display new data.');
+
+                    }
+                  },
+                  buttonColor: AppColor.kPrimaryColor),
+            )
+          ],
+        ),
         FutureBuilder<List<OneStudentInfoModel>>(
-          future: StudentController().getStudentsDetailsInAllSubject('20'),
+          future: StudentController().getStudentsDetailsInAllSubject(name),
           builder: (BuildContext context,
               AsyncSnapshot<List<OneStudentInfoModel>> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return CircularProgressIndicator(); // Display a loading indicator while fetching data
+              return Align(
+                alignment: Alignment.bottomCenter,
+
+                  child: CircularProgressIndicator());
             } else if (snapshot.hasError) {
-              return Text(
-                  'Error: ${snapshot.error}'); // Display an error message if an error occurs
+              return Text('Error: ${snapshot.error}');
             } else {
               return Column(
                 children: [
@@ -34,9 +77,9 @@ class _StudentReportState extends State<StudentReport> {
                   DataTable(
                     showCheckboxColumn: true,
                     headingRowColor: MaterialStateColor.resolveWith(
-                            (states) => AppColor.kSecondaryColor),
+                        (states) => AppColor.kSecondaryColor),
                     dataRowColor: MaterialStateColor.resolveWith(
-                            (states) => AppColor.kWhite),
+                        (states) => AppColor.kWhite),
                     dividerThickness: 2.0,
                     border: TableBorder.all(color: AppColor.kGrey, width: 2),
                     columns: [
