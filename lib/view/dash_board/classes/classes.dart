@@ -1,3 +1,4 @@
+import 'package:attendance_admin/constant/app_style/app_styles.dart';
 import 'package:attendance_admin/model/class_model.dart';
 import 'package:attendance_admin/model/sign_up_model.dart';
 import 'package:attendance_admin/utils/component/dialoge_boxes/delete_confirmations.dart';
@@ -98,7 +99,7 @@ class _ClassesScreenState extends State<ClassesScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Text('Teacher Information'),
+                      const Text('Teacher Information',style: kSubHead,),
                       DataTable(
                         showCheckboxColumn: true,
                         headingRowColor: MaterialStateColor.resolveWith(
@@ -150,7 +151,7 @@ class _ClassesScreenState extends State<ClassesScreen> {
                           );
                         }).toList(),
                       ),
-                      Text('Assigned Subject Information'),
+                      Text('Assigned Subject Information',style: kSubHead,),
                     ],
                   );
                 }

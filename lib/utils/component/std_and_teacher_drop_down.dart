@@ -104,6 +104,8 @@ class SubjectDropdown extends StatelessWidget {
             }).toList();
 
             return DropdownButton<String>(
+              dropdownColor: AppColor.kWhite,
+              focusColor: AppColor.kSecondary54Color,
               items: snap.map((ClassInputModel model) {
                 return DropdownMenuItem<String>(
                   value: model.subjectId,
@@ -115,7 +117,8 @@ class SubjectDropdown extends StatelessWidget {
               hint: Text('Select a subject',
                   style: TextStyle(color: AppColor.kBlack)),
               isExpanded: true,
-              style: TextStyle(color: AppColor.kBlack),
+              style: TextStyle(
+                  color: AppColor.kPrimaryColor, fontWeight: FontWeight.w700),
             );
           } else {
             return const Row(
@@ -188,6 +191,7 @@ class AttendanceDatesDropdown extends StatelessWidget {
                   child: Text(formatDate(model.selectedDate)),
                 );
               }).toList(),
+
               onChanged: onChanged,
               value: value,
               hint: Text('Select a subject',

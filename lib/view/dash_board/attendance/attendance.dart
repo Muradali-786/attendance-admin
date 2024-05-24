@@ -138,7 +138,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Text('Subject Information'),
+                        Text('Subject Information',style: kSubHead,),
                         DataTable(
                           showCheckboxColumn: true,
                           headingRowColor: MaterialStateColor.resolveWith(
@@ -201,7 +201,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
                             );
                           }).toList(),
                         ),
-                        Text('Enrolled Student Information'),
+                        Text('Enrolled Student Information',style: kSubHead,),
                       ],
                     );
                   }

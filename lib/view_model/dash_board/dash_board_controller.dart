@@ -1,5 +1,4 @@
 import 'package:attendance_admin/utils/utils.dart';
-import 'package:attendance_admin/view/dash_board/students/student.dart';
 import 'package:attendance_admin/view_model/add_students/students_controller.dart';
 import 'package:attendance_admin/view_model/attendance/attendance_controller.dart';
 import 'package:attendance_admin/view_model/class_input/class_controller.dart';

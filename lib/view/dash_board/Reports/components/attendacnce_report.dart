@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../constant/app_style/app_colors.dart';
+import '../../../../constant/app_style/app_styles.dart';
 import '../../../../model/attendance_report_model.dart';
 import '../../../../model/class_model.dart';
 import '../../../../utils/component/custom_button.dart';
@@ -91,7 +92,7 @@ class _AttendanceReportState extends State<AttendanceReport> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Text('Subject Information'),
+                    Text('Subject Information',style: kSubHead,),
                     DataTable(
                       showCheckboxColumn: true,
                       headingRowColor: MaterialStateColor.resolveWith(
@@ -151,7 +152,7 @@ class _AttendanceReportState extends State<AttendanceReport> {
                         );
                       }).toList(),
                     ),
-                    Text('Enrolled Student Information'),
+                    Text('Enrolled Student Information',style: kSubHead,),
                   ],
                 );
               }

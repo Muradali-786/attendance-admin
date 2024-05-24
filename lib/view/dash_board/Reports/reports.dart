@@ -76,8 +76,11 @@ class _ReportDropdownState extends State<ReportDropdown> {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         DropdownButton<String>(
-          hint: Text("Select Report"),
+          hint: Text("Select Report",style: TextStyle(color: AppColor.kPrimaryTextColor),),
           value: _selectedReport,
+          dropdownColor: AppColor.kSubmarine,
+
+
           onChanged: (newValue) {
             setState(() {
               _selectedReport = newValue;
@@ -85,7 +88,7 @@ class _ReportDropdownState extends State<ReportDropdown> {
           },
           items: _reports.map((report) {
             return DropdownMenuItem(
-              child: Text(report),
+              child: Text(report,style:TextStyle(color: AppColor.kPrimaryColor)),
               value: report,
             );
           }).toList(),

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'app_colors.dart';
+
 
 
 class AppStyles{
@@ -31,3 +33,10 @@ const String CLASS = 'Classes';
 //Subs collections of CLASS
 const String STUDENT = 'Students';
 const String ATTENDANCE = 'Attendance';
+
+
+const TextStyle kSubHead = TextStyle(
+  fontSize: 18,
+  fontWeight: FontWeight.bold,
+  color: AppColor.kPrimaryColor,
+);

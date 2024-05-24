@@ -9,6 +9,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import '../../../constant/app_style/app_colors.dart';
+import '../../../constant/app_style/app_styles.dart';
 import '../../../model/sign_up_model.dart';
 import '../../../utils/component/custom_button.dart';
 import '../../../utils/component/std_and_teacher_drop_down.dart';
@@ -109,7 +110,7 @@ class _StudentScreenState extends State<StudentScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Text('Subject Information'),
+                      Text('Subject Information',style: kSubHead,),
                       DataTable(
                         showCheckboxColumn: true,
                         headingRowColor: MaterialStateColor.resolveWith(
@@ -172,7 +173,7 @@ class _StudentScreenState extends State<StudentScreen> {
                           );
                         }).toList(),
                       ),
-                      Text('Enrolled Student Information'),
+                      Text('Enrolled Student Information',style: kSubHead,),
                     ],
                   );
                 }

@@ -3,6 +3,7 @@ import 'package:attendance_admin/utils/component/dialog_text_field.dart';
 import 'package:attendance_admin/utils/utils.dart';
 import 'package:flutter/material.dart';
 import '../../../../constant/app_style/app_colors.dart';
+import '../../../../constant/app_style/app_styles.dart';
 import '../../../../model/single_std_info_model.dart';
 import '../../../../view_model/add_students/students_controller.dart';
 
@@ -73,7 +74,7 @@ class _StudentReportState extends State<StudentReport> {
             } else {
               return Column(
                 children: [
-                  Text('Student Information'),
+                  Text('Student Information',style: kSubHead),
                   DataTable(
                     showCheckboxColumn: true,
                     headingRowColor: MaterialStateColor.resolveWith(
