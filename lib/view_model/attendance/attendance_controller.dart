@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../../constant/app_style/app_styles.dart';
 import '../../model/attendance_model.dart';
@@ -119,7 +120,17 @@ class AttendanceController extends ChangeNotifier {
         .get();
   }
 
-  Future<List<AttendanceReportModel>> getAllAttendanceReportBySubject(String subjectId) async {
+  Future<QuerySnapshot> getCurrentDateAttendanceRecord(String subjectId) {
+
+    return _fireStore
+        .collection(CLASS)
+        .doc(subjectId)
+        .collection(ATTENDANCE)
+        .get();
+  }
+
+  Future<List<AttendanceReportModel>> getAllAttendanceReportBySubject(
+      String subjectId) async {
     List<AttendanceReportModel> attendanceRecord = [];
     QuerySnapshot studentSnapshot = await _fireStore
         .collection(CLASS)
@@ -235,4 +246,3 @@ class AttendanceController extends ChangeNotifier {
     notifyListeners();
   }
 }
-

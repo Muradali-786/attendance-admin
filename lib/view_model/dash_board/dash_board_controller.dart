@@ -4,8 +4,13 @@ import 'package:attendance_admin/view_model/attendance/attendance_controller.dar
 import 'package:attendance_admin/view_model/class_input/class_controller.dart';
 import 'package:attendance_admin/view_model/teacher/teacher_controller.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
+import 'package:intl/intl.dart';
 import '../../constant/app_style/app_styles.dart';
+
+String formatDate(DateTime dateTime) {
+  final formatter = DateFormat('yMMMMd');
+  return formatter.format(dateTime);
+}
 
 class DashBoardController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -51,20 +56,68 @@ class DashBoardController {
     return '0';
   }
 
+  Future<Map<String, int>> getTodayAttendanceStats() async {
+    Map<String, int> attendanceStats = {
+      'present': 0,
+      'absent': 0,
+      'leave': 0,
+    };
 
+    QuerySnapshot classSnapshot = await _classController.getAllClassesData();
 
-  String id = '123456';
+    if (classSnapshot.size != 0) {
+      for (QueryDocumentSnapshot classDoc in classSnapshot.docs) {
+        String classId = classDoc.id;
+
+        QuerySnapshot attendanceDoc =
+            await _attendanceController.getCurrentDateAttendanceRecord(classId);
+
+        if (attendanceDoc.docs.isNotEmpty) {
+          for (dynamic record in attendanceDoc.docs) {
+            Map<String, dynamic> attendanceList =
+                record['attendanceList'] as Map<String, dynamic>;
+
+            attendanceList.forEach((key, status) {
+              if (status == 'P') {
+                attendanceStats['present'] = attendanceStats['present']! + 1;
+              } else if (status == 'A') {
+                attendanceStats['absent'] = attendanceStats['absent']! + 1;
+              } else if (status == 'L') {
+                attendanceStats['leave'] = attendanceStats['leave']! + 1;
+              }
+            });
+          }
+        }
+      }
+    }
+
+    return attendanceStats;
+  }
+
+  String today = formatDate(DateTime.now());
+
   Future<void> storeDepartmentStatsInAdmin() async {
     try {
-      await _firestore.collection(ADMIN).doc(id).set({
-        'totalStudent': '400',
-        'totalClasses': '12',
-        'totalTeacher': '06',
-        'percentage': '87',
+      String totalClasses = await getAllSubjectLength();
+      String totalStudents = await getAllEnrolledStudentLength();
+      String totalTeacher = await getAllTeacherLength();
+      Map<String, int> atdncStats = await getTodayAttendanceStats();
+
+      int percentage = (int.parse(atdncStats['present'].toString()) /
+              int.parse(totalStudents) *
+              100)
+          .toInt();
+
+      await _firestore.collection(ADMIN).doc(today).set({
+        'totalStudent': totalStudents,
+        'totalClasses': totalClasses,
+        'totalTeacher': totalTeacher,
+        'percentage': percentage.toString(),
         'depCount': '01',
-        'presentStudents': '250',
-        'absentStudents': '50',
-        'leavesStudents': '100',
+        'presentStudents': atdncStats['present'].toString(),
+        'absentStudents': atdncStats['absent'].toString(),
+        'leavesStudents': atdncStats['leave'].toString(),
+        'currentDate': DateTime.now()
       });
       Utils.toastMessage('Data Refresh');
     } catch (e) {
@@ -73,6 +126,7 @@ class DashBoardController {
   }
 
   Stream<DocumentSnapshot> getDepartmentStats() {
-    return _firestore.collection(ADMIN).doc(id).snapshots();
+    return _firestore.collection(ADMIN).doc(today).snapshots();
   }
+
 }

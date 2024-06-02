@@ -21,7 +21,7 @@ class _TeacherInformationState extends State<TeacherInformation> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: const BoxDecoration(
-        color: AppColor.kSecondaryColor,
+        color: AppColor.kSubmarine,
         borderRadius: BorderRadius.all(Radius.circular(10)),
       ),
       child: Column(
@@ -32,7 +32,7 @@ class _TeacherInformationState extends State<TeacherInformation> {
             style: Theme.of(context)
                 .textTheme
                 .titleLarge!
-                .copyWith(color: AppColor.kTextWhiteColor),
+                .copyWith(color: AppColor.kPrimaryColor),
           ),
           SizedBox(
             width: double.infinity,

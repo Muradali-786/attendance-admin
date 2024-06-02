@@ -34,9 +34,7 @@ class TeacherController with ChangeNotifier {
         .get();
   }
 
-  Future<void> deleteTeacherData() async {
-    dynamic data = await _auth.userChanges().toList();
-  }
+
 
   Future<void> registerTeacher(SignUpModel signUpModel, String password) async {
     setLoading(true);

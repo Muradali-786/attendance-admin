@@ -353,7 +353,10 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
             await StudentController().calculateStudentAttendance(
               onSubjectSelect!,
               stdIdList,
-            );
+            ).then((value) {
+              stdIdList.clear();
+              provider.attendanceStatus.clear();
+            });
           } else {
 
             Utils.toastMessage('Please select a subject');
