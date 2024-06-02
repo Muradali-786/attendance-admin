@@ -11,6 +11,7 @@ String formatDate(DateTime dateTime) {
   final formatter = DateFormat('yMMMMd');
   return formatter.format(dateTime);
 }
+DateTime currentDate = DateTime.now();
 
 class DashBoardController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -129,4 +130,15 @@ class DashBoardController {
     return _firestore.collection(ADMIN).doc(today).snapshots();
   }
 
+
+  DateTime startOfDay = DateTime(currentDate.year, currentDate.month, currentDate.day);
+  DateTime endOfDay = DateTime(currentDate.year, currentDate.month, currentDate.day, 23, 59, 59);
+
+  Future<QuerySnapshot> departmentStats() {
+    return _firestore
+        .collection(ADMIN)
+        .where('currentDate', isGreaterThanOrEqualTo: startOfDay)
+        .where('currentDate', isLessThanOrEqualTo: endOfDay)
+        .get();
+  }
 }

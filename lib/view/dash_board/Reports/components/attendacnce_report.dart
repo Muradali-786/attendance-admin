@@ -69,6 +69,7 @@ class _AttendanceReportState extends State<AttendanceReport> {
                     teacherId: onTeacherSelect.toString(),
                   ),
                 ),
+                _saveAttendanceButton(),
               ],
             ),
           ),
@@ -243,6 +244,17 @@ class _AttendanceReportState extends State<AttendanceReport> {
         style: const TextStyle(
             color: AppColor.kWhite, overflow: TextOverflow.ellipsis),
       ),
+    );
+  }
+  Widget _saveAttendanceButton(){
+  return CustomRoundButton(
+      height: 40,
+      title: 'EXPORT ATTENDANCE',
+
+      onPress: () async {
+
+      },
+      buttonColor: AppColor.kPrimaryColor,
     );
   }
 }

@@ -7,8 +7,15 @@ import '../../model/attendance_model.dart';
 import '../../model/attendance_report_model.dart';
 import '../../utils/utils.dart';
 
+DateTime currentDate = DateTime.now();
+
 class AttendanceController extends ChangeNotifier {
   final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
+
+  DateTime startOfDay =
+      DateTime(currentDate.year, currentDate.month, currentDate.day);
+  DateTime endOfDay = DateTime(
+      currentDate.year, currentDate.month, currentDate.day, 23, 59, 59);
 
   bool _loading = false;
   bool get loading => _loading;
@@ -121,11 +128,12 @@ class AttendanceController extends ChangeNotifier {
   }
 
   Future<QuerySnapshot> getCurrentDateAttendanceRecord(String subjectId) {
-
     return _fireStore
         .collection(CLASS)
         .doc(subjectId)
         .collection(ATTENDANCE)
+        .where('selectedDate', isGreaterThanOrEqualTo: startOfDay)
+        .where('selectedDate', isLessThanOrEqualTo: endOfDay).limit(1)
         .get();
   }
 

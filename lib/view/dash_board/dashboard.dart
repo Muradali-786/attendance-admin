@@ -1,13 +1,9 @@
 import 'package:attendance_admin/constant/app_style/app_colors.dart';
-import 'package:attendance_admin/view_model/dash_board/dash_board_controller.dart';
-import 'package:attendance_admin/view_model/teacher/teacher_controller.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-
 import '../../responsive.dart';
 import 'dashboard_component/counts_file.dart';
 import 'dashboard_component/graph_charts_statistic.dart';
-
 
 class DashboardScreen extends StatelessWidget {
   static const String id = '\dashboard';
@@ -17,10 +13,6 @@ class DashboardScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    DashBoardController().storeDepartmentStatsInAdmin();
-
-
-
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
@@ -227,7 +219,6 @@ class LineData {
   LineData() {
     // Mock data for demonstration
     for (int i = 0; i <= 31; i++) {
-
       bottomTitle[i] = i.toString();
     }
 
