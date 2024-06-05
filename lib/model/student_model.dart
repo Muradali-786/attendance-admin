@@ -2,6 +2,7 @@ class StudentModel {
   String? studentId;
   final String studentName;
   final String studentRollNo;
+
   int attendancePercentage;
   int totalPresent;
   int totalAbsent;
@@ -38,3 +39,6 @@ class StudentModel {
     };
   }
 }
+
+
+

@@ -133,7 +133,8 @@ class AttendanceController extends ChangeNotifier {
         .doc(subjectId)
         .collection(ATTENDANCE)
         .where('selectedDate', isGreaterThanOrEqualTo: startOfDay)
-        .where('selectedDate', isLessThanOrEqualTo: endOfDay).limit(1)
+        .where('selectedDate', isLessThanOrEqualTo: endOfDay)
+        .limit(1)
         .get();
   }
 
@@ -198,6 +199,15 @@ class AttendanceController extends ChangeNotifier {
         .doc(subjectId)
         .collection(ATTENDANCE)
         .orderBy('selectedDate', descending: false)
+        .get();
+  }
+
+  Future<DocumentSnapshot> getAttendanceById(String subjectId, String attendanceId) {
+    return _fireStore
+        .collection(CLASS)
+        .doc(subjectId)
+        .collection(ATTENDANCE)
+        .doc(attendanceId)
         .get();
   }
 
