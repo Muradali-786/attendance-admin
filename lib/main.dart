@@ -6,6 +6,7 @@ import 'package:attendance_admin/view_model/add_students/students_controller.dar
 import 'package:attendance_admin/view_model/attendance/attendance_controller.dart';
 import 'package:attendance_admin/view_model/class_input/class_controller.dart';
 import 'package:attendance_admin/view_model/dash_board/dash_board_controller.dart';
+import 'package:attendance_admin/view_model/services/media/media_services.dart';
 import 'package:attendance_admin/view_model/teacher/teacher_controller.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
@@ -48,6 +49,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider<StudentController>(
           create: (_) => StudentController(),
+        ),
+        ChangeNotifierProvider<MediaServices>(
+          create: (_) => MediaServices(),
         ),
 
       ],

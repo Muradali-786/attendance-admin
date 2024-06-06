@@ -80,14 +80,19 @@ Future<void> showDeleteStudentConfirmationDialog(
 }
 
 Future<void> showDeleteAttendanceConfirmationDialog(
-    BuildContext context, AttendanceModel model, String subjectId) async {
+    BuildContext context,
+    String subjectId,
+    String attendanceId,
+    dynamic date,
+    String time,
+    List<String> stdIdList) async {
   return showDialog(
     context: context,
     builder: (context) {
       return AlertDialog(
         title: const Text("Delete"),
-        content: Text(
-            "Are you sure you want to delete the selected attendance(${model.currentTime})."),
+        content: const Text(
+            "Are you sure you want to delete the selected attendance."),
         actions: [
           TextButton(
             onPressed: () {
@@ -103,13 +108,13 @@ Future<void> showDeleteAttendanceConfirmationDialog(
               Navigator.of(context).pop();
               await AttendanceController().deleteAttendanceRecord(
                 subjectId,
-                model.attendanceId!,
+                attendanceId,
               );
 
               await AttendanceController().updateAttendanceCount(subjectId);
 
               await StudentController().calculateStudentAttendance(
-                  subjectId, model.attendanceList.keys.toList());
+                  subjectId, stdIdList);
             },
             child: const Text("DELETE",
                 style: TextStyle(color: AppColor.kSecondaryColor)),
@@ -119,6 +124,7 @@ Future<void> showDeleteAttendanceConfirmationDialog(
     },
   );
 }
+
 Future<void> changeStatusConfirmationDialog(
     BuildContext context, String teacherId, bool newStatus) async {
   String statusText = newStatus ? "activate" : "deactivate";
@@ -129,8 +135,7 @@ Future<void> changeStatusConfirmationDialog(
     builder: (context) {
       return AlertDialog(
         title: Text(titleText),
-        content: Text(
-            "Are you sure you want to $statusText this account?"),
+        content: Text("Are you sure you want to $statusText this account?"),
         actions: [
           TextButton(
             onPressed: () {
@@ -144,7 +149,8 @@ Future<void> changeStatusConfirmationDialog(
           TextButton(
             onPressed: () async {
               Navigator.pop(context);
-              await TeacherController().updateTeacherStatus(teacherId, newStatus);
+              await TeacherController()
+                  .updateTeacherStatus(teacherId, newStatus);
             },
             child: Text(
               statusText.toUpperCase(),
@@ -156,4 +162,3 @@ Future<void> changeStatusConfirmationDialog(
     },
   );
 }
-

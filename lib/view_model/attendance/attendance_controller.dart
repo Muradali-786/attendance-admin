@@ -23,6 +23,8 @@ class AttendanceController extends ChangeNotifier {
   List<String> _attendanceStatus = [];
   List<String> get attendanceStatus => _attendanceStatus;
 
+
+
   Map<dynamic, dynamic>? _updatedStatusMap;
   Map<dynamic, dynamic>? get updatedStatusMap => _updatedStatusMap;
 
@@ -30,6 +32,13 @@ class AttendanceController extends ChangeNotifier {
     _updatedStatusMap = data;
     notifyListeners();
   }
+
+
+  set attendanceStatus(List<String> value) {
+    _attendanceStatus = value;
+    notifyListeners();
+  }
+
 
   attendanceStatusProvider(int length) {
     _attendanceStatus = List.generate(length, (index) => "P");

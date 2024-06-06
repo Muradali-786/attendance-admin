@@ -55,7 +55,7 @@ class ReportDropdown extends StatefulWidget {
 }
 
 class _ReportDropdownState extends State<ReportDropdown> {
-  String? _selectedReport;
+  String? _selectedReport='Attendance Report';
   List<String> _reports = ["Attendance Report", "Student Report"];
   
   String? onTeacherSelect;

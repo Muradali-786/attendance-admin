@@ -1,6 +1,8 @@
+import 'package:attendance_admin/utils/utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 import '../../../../constant/app_style/app_colors.dart';
 import '../../../../constant/app_style/app_styles.dart';
@@ -11,9 +13,9 @@ import '../../../../utils/component/dialoge_boxes/delete_confirmations.dart';
 import '../../../../utils/component/std_and_teacher_drop_down.dart';
 import '../../../../view_model/attendance/attendance_controller.dart';
 import '../../../../view_model/class_input/class_controller.dart';
+import '../../../../view_model/services/media/media_services.dart';
 import '../../classes/import/import_dialog_box.dart';
 import '../../classes/update/updae_class_dialog.dart';
-
 
 class AttendanceReport extends StatefulWidget {
   const AttendanceReport({super.key});
@@ -41,8 +43,8 @@ class _AttendanceReportState extends State<AttendanceReport> {
           Container(
             height: 40,
             width: double.infinity,
-            decoration:
-            BoxDecoration(border: Border.all(color: AppColor.kPrimaryColor)),
+            decoration: BoxDecoration(
+                border: Border.all(color: AppColor.kPrimaryColor)),
             child: Row(
               children: [
                 Expanded(
@@ -62,7 +64,6 @@ class _AttendanceReportState extends State<AttendanceReport> {
                     value: onSubjectSelect,
                     onChanged: (String? newValue) {
                       setState(() {
-
                         onSubjectSelect = newValue;
                       });
                     },
@@ -86,21 +87,25 @@ class _AttendanceReportState extends State<AttendanceReport> {
                 return Container();
               } else {
                 List<ClassInputModel> snap = snapshot.data!.docs.map((doc) {
-                  Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+                  Map<String, dynamic> data =
+                      doc.data() as Map<String, dynamic>;
                   return ClassInputModel.fromMap(data);
                 }).toList();
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Text('Subject Information',style: kSubHead,),
+                    Text(
+                      'Subject Information',
+                      style: kSubHead,
+                    ),
                     DataTable(
                       showCheckboxColumn: true,
                       headingRowColor: MaterialStateColor.resolveWith(
-                            (states) => AppColor.kSecondaryColor,
+                        (states) => AppColor.kSecondaryColor,
                       ),
                       dataRowColor: MaterialStateColor.resolveWith(
-                              (states) => AppColor.kWhite),
+                          (states) => AppColor.kWhite),
                       dividerThickness: 2.0,
                       border: TableBorder.all(color: AppColor.kGrey, width: 2),
                       columns: [
@@ -153,7 +158,10 @@ class _AttendanceReportState extends State<AttendanceReport> {
                         );
                       }).toList(),
                     ),
-                    Text('Enrolled Student Information',style: kSubHead,),
+                    Text(
+                      'Enrolled Student Information',
+                      style: kSubHead,
+                    ),
                   ],
                 );
               }
@@ -162,7 +170,7 @@ class _AttendanceReportState extends State<AttendanceReport> {
           FutureBuilder<List<AttendanceReportModel>>(
             future: onSubjectSelect != null
                 ? AttendanceController()
-                .getAllAttendanceReportBySubject(onSubjectSelect!)
+                    .getAllAttendanceReportBySubject(onSubjectSelect!)
                 : null,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
@@ -176,10 +184,10 @@ class _AttendanceReportState extends State<AttendanceReport> {
                   child: DataTable(
                     showCheckboxColumn: true,
                     headingRowColor: MaterialStateColor.resolveWith(
-                          (states) => AppColor.kSecondaryColor,
+                      (states) => AppColor.kSecondaryColor,
                     ),
                     dataRowColor: MaterialStateColor.resolveWith(
-                            (states) => AppColor.kWhite),
+                        (states) => AppColor.kWhite),
                     dividerThickness: 2.0,
                     border: TableBorder.all(color: AppColor.kGrey, width: 2),
                     columns: [
@@ -187,12 +195,12 @@ class _AttendanceReportState extends State<AttendanceReport> {
                       _dataColumnText('Roll No'),
                       ...List.generate(
                         students.isNotEmpty ? students.first.dates.length : 0,
-                            (index) => DataColumn(
+                        (index) => DataColumn(
                           label: Text(
                               students.isNotEmpty
                                   ? formatDate(students.first.dates[index]
-                                  .toDate()
-                                  .toUtc())
+                                      .toDate()
+                                      .toUtc())
                                   : 'Date ${index + 1}',
                               style: const TextStyle(
                                   color: AppColor.kWhite,
@@ -246,16 +254,22 @@ class _AttendanceReportState extends State<AttendanceReport> {
       ),
     );
   }
-  Widget _saveAttendanceButton(){
-  return CustomRoundButton(
-      height: 40,
-      title: 'EXPORT ATTENDANCE',
 
-      onPress: () async {
-
-      },
-      buttonColor: AppColor.kPrimaryColor,
-    );
+  Widget _saveAttendanceButton() {
+    return Consumer<MediaServices>(builder: (context, provider, _) {
+      return CustomRoundButton(
+        height: 40,
+        title: 'EXPORT ATTENDANCE',
+        loading: provider.loading,
+        onPress: () async {
+          if (onSubjectSelect != null) {
+            await provider.exportAndShareAttendanceSheet(onSubjectSelect!);
+          } else {
+            Utils.toastMessage('Please select Any subject');
+          }
+        },
+        buttonColor: AppColor.kPrimaryColor,
+      );
+    });
   }
 }
-
