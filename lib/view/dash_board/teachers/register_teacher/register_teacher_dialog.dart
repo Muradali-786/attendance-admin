@@ -8,7 +8,6 @@ import '../../../../utils/component/custom_button.dart';
 import '../../../../utils/component/dialog_text_field.dart';
 import '../../../../utils/utils.dart';
 
-
 Future<void> registerNewTeacherDialog(BuildContext context) async {
   final formKey = GlobalKey<FormState>();
   TextEditingController emailController = TextEditingController();
@@ -187,15 +186,12 @@ Future<void> registerNewTeacherDialog(BuildContext context) async {
                           onPress: () async {
                             if (formKey.currentState!.validate()) {
                               SignUpModel signUpModel = SignUpModel(
-                                name: nameController.text.trim(),
-                                email: emailController.text.trim(),
-                              );
+                                  name: nameController.text.trim(),
+                                  email: emailController.text.trim(),
+                                  password: pasController.text.trim());
 
                               await provider
-                                  .registerTeacher(
-                                signUpModel,
-                                pasController.text.trim(),
-                              )
+                                  .registerTeacher(signUpModel)
                                   .then((value) {
                                 nameController.clear();
                                 emailController.clear();

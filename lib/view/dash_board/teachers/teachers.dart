@@ -22,10 +22,10 @@ class TeachersScreen extends StatefulWidget {
 
 class _TeachersScreenState extends State<TeachersScreen> {
   TeacherController _teacherController = TeacherController();
-
+  int rowIndex = 0;
   @override
   Widget build(BuildContext context) {
-    int rowIndex = 0;
+
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: SingleChildScrollView(
@@ -36,7 +36,7 @@ class _TeachersScreenState extends State<TeachersScreen> {
               children: [
                 Container(
                   alignment: Alignment.topLeft,
-                  child: Text('Faculty Information',
+                  child: const Text('Faculty Information',
                       style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
@@ -92,6 +92,7 @@ class _TeachersScreenState extends State<TeachersScreen> {
                         _dataColumnText('Gmail'),
                         _dataColumnText('Subjects'),
                         _dataColumnText('Credit Sum'),
+                        _dataColumnText('Control'),
                         _dataColumnText('Status'),
                         _dataColumnText('Actions'),
                       ],
@@ -100,28 +101,62 @@ class _TeachersScreenState extends State<TeachersScreen> {
                         return DataRow(
                           cells: [
                             _dataCellText(rowIndex.toString()),
-                            _dataCellText(teacher.name),
+                            _dataCellTextWithTooltip(teacher.name,teacher.password.toString()),
                             _dataCellText(teacher.email),
                             _dataCellText(teacher.courseLoad),
                             _dataCellText(teacher.totalCreditHour),
-                            DataCell(Tooltip(
-                              message: 'Click the button to Change the Status',
-                              child: TextButton(
-
+                            DataCell(
+                              Tooltip(
+                                message:
+                                    'Click the button to Change the Control',
+                                child: TextButton(
                                   onPressed: () {
-                                    bool newStatus=teacher.status;
-                                    newStatus=!newStatus;
+                                    bool newControl = teacher.control;
+                                    newControl = !newControl;
 
-                                    changeStatusConfirmationDialog(context, teacher.teacherId!, newStatus);
-
+                                    changeAccessControlConfirmationDialog(
+                                        context,
+                                        teacher.teacherId!,
+                                        newControl);
                                   },
+                                  child: Text(
+                                    teacher.control ? 'FULL' : 'LIMITED',
+                                    style: TextStyle(
+                                      color: teacher.control
+                                          ? AppColor.kPrimaryColor
+                                          : AppColor.kAlertColor,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            DataCell(
+                              Tooltip(
+                                message:
+                                    'Click the button to Change the Status',
+                                child: TextButton(
+                                  onPressed: () {
+                                    bool newStatus = teacher.status;
+                                    newStatus = !newStatus;
 
-                                  child: Text(teacher.status ? 'Approved' : 'Declined',
-                                      style: TextStyle(
-                                          color: teacher.status ?AppColor.kPrimaryColor:AppColor.kAlertColor,
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w500))),
-                            )),
+                                    changeStatusConfirmationDialog(
+                                        context, teacher.teacherId!, newStatus);
+                                  },
+                                  child: Text(
+                                    teacher.status ? 'Approved' : 'Declined',
+                                    style: TextStyle(
+                                      color: teacher.status
+                                          ? AppColor.kPrimaryColor
+                                          : AppColor.kAlertColor,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
                             DataCell(Row(
                               children: [
                                 CustomIconButton(
@@ -171,6 +206,22 @@ class _TeachersScreenState extends State<TeachersScreen> {
             color: AppColor.kPrimaryColor,
             fontSize: 18,
             fontWeight: FontWeight.w500),
+      ),
+    );
+  }
+  DataCell _dataCellTextWithTooltip(String title,String toolTip) {
+    return DataCell(
+      Tooltip(
+        message: toolTip.toString(),
+        child: Text(
+          title,
+          overflow: TextOverflow.ellipsis,
+          textAlign: TextAlign.start,
+          style: const TextStyle(
+              color: AppColor.kPrimaryColor,
+              fontSize: 18,
+              fontWeight: FontWeight.w500),
+        ),
       ),
     );
   }

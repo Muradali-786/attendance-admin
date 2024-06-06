@@ -162,3 +162,46 @@ Future<void> changeStatusConfirmationDialog(
     },
   );
 }
+
+
+Future<void> changeAccessControlConfirmationDialog(
+    BuildContext context, String teacherId, bool newStatus) async {
+  String statusText = newStatus ? "Full Access" : "Limited Access";
+
+  String titleText = 'ACCESS CONTROL';
+  String detailedDescription = newStatus
+      ? "By providing \n full access, a teacher can add new subjects and students to those subjects."
+      : "\nWith limited access, a teacher cannot add subjects or students.";
+
+  return showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: Text(titleText),
+        content: Text("Are you sure you want to grant $statusText to this account? $detailedDescription"),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text(
+              "CANCEL",
+              style: TextStyle(color: AppColor.kSecondaryColor),
+            ),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.pop(context);
+              await TeacherController()
+                  .updateTeacherAccessControl(teacherId, newStatus);
+            },
+            child: Text(
+              statusText.toUpperCase(),
+              style: const TextStyle(color: AppColor.kSecondaryColor),
+            ),
+          ),
+        ],
+      );
+    },
+  );
+}

@@ -34,14 +34,14 @@ class TeacherController with ChangeNotifier {
         .get();
   }
 
-
-
-  Future<void> registerTeacher(SignUpModel signUpModel, String password) async {
+  Future<void> registerTeacher(SignUpModel signUpModel) async {
     setLoading(true);
     try {
       await _auth
           .createUserWithEmailAndPassword(
-              email: signUpModel.email, password: password)
+        email: signUpModel.email,
+        password: signUpModel.password,
+      )
           .then((e) {
         signUpModel.teacherId = e.user!.uid;
         saveTeacherData(signUpModel).then((value) {
@@ -55,21 +55,33 @@ class TeacherController with ChangeNotifier {
       Utils.toastMessage('error during signup');
     }
   }
-  Future<void> updateTeacherProfile(String teacherId,String name) {
+
+  Future<void> updateTeacherProfile(String teacherId, String name) {
     return _firestore.collection(TEACHER).doc(teacherId).update({
-      'name':name,
+      'name': name,
     }).then((value) {
       Utils.toastMessage('Profile Updated');
     }).onError((error, stackTrace) {
       Utils.toastMessage('Error While updating Profile');
     });
   }
+
   Future<void> updateTeacherStatus(String teacherId, bool newStatus) async {
     try {
       await _firestore.collection(TEACHER).doc(teacherId).update({
         'status': newStatus,
       });
       Utils.toastMessage('Status updated successfully');
+    } catch (e) {
+      Utils.toastMessage('Failed to update status');
+    }
+  }
+  Future<void> updateTeacherAccessControl(String teacherId, bool newControl) async {
+    try {
+      await _firestore.collection(TEACHER).doc(teacherId).update({
+        'control': newControl,
+      });
+      Utils.toastMessage('Access Control updated successfully');
     } catch (e) {
       Utils.toastMessage('Failed to update status');
     }
