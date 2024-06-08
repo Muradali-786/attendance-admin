@@ -264,6 +264,7 @@ class _AttendanceReportState extends State<AttendanceReport> {
         onPress: () async {
           if (onSubjectSelect != null) {
             await provider.exportAndShareAttendanceSheet(onSubjectSelect!);
+            print('kitna aya');
           } else {
             Utils.toastMessage('Please select Any subject');
           }

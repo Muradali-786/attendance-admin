@@ -1,9 +1,8 @@
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:excel/excel.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 
@@ -12,6 +11,7 @@ import '../../../model/student_model.dart';
 import '../../../utils/utils.dart';
 import '../../add_students/students_controller.dart';
 import '../../attendance/attendance_controller.dart';
+import 'dart:html' as html;
 
 class MediaServices with ChangeNotifier {
   final StudentController _studentController = StudentController();
@@ -218,18 +218,38 @@ class MediaServices with ChangeNotifier {
   //   await Share.shareXFiles([XFile(file.path)], text: 'Student-attendance');
   // }
 
+  void _downloadFile(List<int> bytes, String fileName) {
+    final Uint8List file = Uint8List.fromList(bytes);
+
+    final blob = html.Blob([file.single]);
+
+    final url = html.Url.createObjectUrlFromBlob(blob);
+    final anchor = html.AnchorElement(href: url)
+      ..setAttribute("download", fileName)
+      ..click();
+    html.Url.revokeObjectUrl(url);
+  }
+
   Future<void> exportAndShareAttendanceSheet(String classId) async {
     setLoading(true);
     try {
       var excel = Excel.createExcel();
       Sheet sheet = excel['Sheet1'];
 
+
       final studentList = await getStudentDetails(classId);
       final attendanceList = await getAttendanceDetails(classId);
       if (attendanceList.isNotEmpty) {
         addSheetHeader(sheet, attendanceList);
         addStudentAttendanceDetailsToSheet(sheet, studentList, attendanceList);
-        // await shareExcelFile(excel);
+        if (kIsWeb) {
+          String fileName='Student-Attendance-${DateTime.now().millisecondsSinceEpoch}.xlsx';
+          final fileBytes = excel.save(fileName: fileName)!;
+
+          _downloadFile(fileBytes,fileName);
+        } else {
+          // await shareExcelFile(excel);
+        }
       } else {
         Utils.toastMessage('No attendance records to export');
       }

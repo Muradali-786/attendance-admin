@@ -178,7 +178,7 @@ Future<void> updateClassValueDialog(BuildContext context,ClassInputModel model) 
                                     onValidator: (val) {
                                       if (val.isEmpty) {
                                         return 'Please enter a credit Hour';
-                                      } else if (val.length != 1 || !(val == '2' || val == '3' || val == '4')) {
+                                      } else if (val.length != 1 || !(val == '1' || val == '2' || val == '3' || val == '4')) {
                                         return 'Please Enter 2, 3, or 4';
                                       }
                                       return null;
