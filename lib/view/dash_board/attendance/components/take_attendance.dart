@@ -322,6 +322,7 @@ class _TakeAttendanceState extends State<TakeAttendance> {
               classId: onSubjectSelect!,
               selectedDate: date,
               currentTime: currentTime,
+              createdAtDate: DateTime.now(),
               attendanceList: Map.fromIterables(
                 stdIdList,
                 provider.attendanceStatus,

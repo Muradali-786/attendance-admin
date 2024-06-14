@@ -21,9 +21,6 @@ import '../../../../view_model/attendance/attendance_controller.dart';
 import '../../classes/import/import_dialog_box.dart';
 import '../../classes/update/updae_class_dialog.dart';
 
-
-
-
 class AttendanceRecord extends StatefulWidget {
   const AttendanceRecord({super.key});
 
@@ -63,6 +60,7 @@ class _AttendanceRecordState extends State<AttendanceRecord> {
       });
     }
   }
+
   Timestamp? _previousDate;
 
   String formatDate(DateTime dateTime) {
@@ -101,7 +99,7 @@ class _AttendanceRecordState extends State<AttendanceRecord> {
           height: 40,
           width: double.infinity,
           decoration:
-          BoxDecoration(border: Border.all(color: AppColor.kPrimaryColor)),
+              BoxDecoration(border: Border.all(color: AppColor.kPrimaryColor)),
           child: Row(
             children: [
               Expanded(
@@ -172,10 +170,10 @@ class _AttendanceRecordState extends State<AttendanceRecord> {
                   DataTable(
                     showCheckboxColumn: true,
                     headingRowColor: MaterialStateColor.resolveWith(
-                          (states) => AppColor.kSecondaryColor,
+                      (states) => AppColor.kSecondaryColor,
                     ),
                     dataRowColor: MaterialStateColor.resolveWith(
-                            (states) => AppColor.kWhite),
+                        (states) => AppColor.kWhite),
                     dividerThickness: 2.0,
                     border: TableBorder.all(color: AppColor.kGrey, width: 2),
                     columns: [
@@ -240,7 +238,7 @@ class _AttendanceRecordState extends State<AttendanceRecord> {
         FutureBuilder<DocumentSnapshot>(
           future: (onSubjectSelect != null && onAttendSelect != null)
               ? AttendanceController().getAttendanceById(
-              onSubjectSelect.toString(), onAttendSelect.toString())
+                  onSubjectSelect.toString(), onAttendSelect.toString())
               : null,
           builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -258,10 +256,10 @@ class _AttendanceRecordState extends State<AttendanceRecord> {
               StudentStatusModel stdStatuses;
 
               Map<String, dynamic> attendanceList = data['attendanceList'];
-                     
+
               stdModel!.forEach((element) {
                 if (attendanceList.containsKey(element.studentId)) {
-                  _previousDate=data['selectedDate'];
+                  _previousDate = data['selectedDate'];
                   stdIdList.add(element.studentId.toString());
                   var stdStatus = StudentStatusModel(
                     studentId: element.studentId,
@@ -277,37 +275,37 @@ class _AttendanceRecordState extends State<AttendanceRecord> {
 
               return Consumer<AttendanceController>(
                   builder: (context, provider, child) {
-                    return ListView.builder(
-                        itemCount: studentStatuses.length,
-                        shrinkWrap: true,
-                        itemBuilder: (context, index) {
-                          return Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(index.toString()),
-                              Text(studentStatuses[index].studentName),
-                              Text(studentStatuses[index].studentName),
-                              SizedBox(
-                                width: 20,
-                              ),
-                              CustomStatusChangerButton(
-                                attendanceStatus: attendanceList[
+                return ListView.builder(
+                    itemCount: studentStatuses.length,
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) {
+                      return Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(index.toString()),
+                          Text(studentStatuses[index].studentName),
+                          Text(studentStatuses[index].studentName),
+                          const SizedBox(
+                            width: 20,
+                          ),
+                          CustomStatusChangerButton(
+                            attendanceStatus: attendanceList[
                                 studentStatuses[index].studentId.toString()],
-                                onTap: () {
-                                  if (!isChange) {
-                                    provider.setStatusMap(attendanceList);
-                                    isChange = true;
-                                  }
+                            onTap: () {
+                              if (!isChange) {
+                                provider.setStatusMap(attendanceList);
+                                isChange = true;
+                              }
 
-                                  provider.updateStatusListBasedOnKey(
-                                    studentStatuses[index].studentId!,
-                                  );
-                                },
-                              ),
-                            ],
-                          );
-                        });
-                  });
+                              provider.updateStatusListBasedOnKey(
+                                studentStatuses[index].studentId!,
+                              );
+                            },
+                          ),
+                        ],
+                      );
+                    });
+              });
             }
           },
         )
@@ -322,12 +320,14 @@ class _AttendanceRecordState extends State<AttendanceRecord> {
         title: 'UPDATE ATTENDANCE',
         loading: provider.loading,
         onPress: () async {
-         
           if (isChange && stdIdList.isNotEmpty && onAttendSelect != null) {
             AttendanceModel model = AttendanceModel(
               classId: onSubjectSelect.toString(),
               attendanceId: onAttendSelect.toString(),
-              selectedDate: dateChange? currentDate.subtract(Duration(days: 1)): _previousDate!.toDate(),
+              createdAtDate: _previousDate!.toDate(),
+              selectedDate: dateChange
+                  ? currentDate.subtract(Duration(days: 1))
+                  : _previousDate!.toDate(),
               currentTime: currentTime,
               attendanceList: provider.updatedStatusMap!,
             );
@@ -349,20 +349,19 @@ class _AttendanceRecordState extends State<AttendanceRecord> {
     return CustomRoundButton(
       height: 40,
       title: 'DELETE ATTENDANCE',
-
       onPress: () async {
         if (onAttendSelect != null) {
           showDeleteAttendanceConfirmationDialog(
-              context,
-              onSubjectSelect.toString(),
-              onAttendSelect.toString(),
-              currentDate,
-              currentTime,
-              stdIdList).then((value) {
+                  context,
+                  onSubjectSelect.toString(),
+                  onAttendSelect.toString(),
+                  currentDate,
+                  currentTime,
+                  stdIdList)
+              .then((value) {
             setState(() {
-              onAttendSelect=null;
+              onAttendSelect = null;
             });
-
           });
         } else {
           Utils.toastMessage('Please select the attendance first');
