@@ -58,6 +58,7 @@ class DashBoardController {
   }
 
   Future<Map<String, int>> getTodayAttendanceStats() async {
+
     Map<String, int> attendanceStats = {
       'present': 0,
       'absent': 0,
@@ -66,7 +67,10 @@ class DashBoardController {
 
     QuerySnapshot classSnapshot = await _classController.getAllClassesData();
 
+
+
     if (classSnapshot.size != 0) {
+
       for (QueryDocumentSnapshot classDoc in classSnapshot.docs) {
         String classId = classDoc.id;
 
@@ -75,6 +79,7 @@ class DashBoardController {
 
         if (attendanceDoc.docs.isNotEmpty) {
           for (dynamic record in attendanceDoc.docs) {
+
             Map<String, dynamic> attendanceList =
                 record['attendanceList'] as Map<String, dynamic>;
 
@@ -122,6 +127,7 @@ class DashBoardController {
       });
       Utils.toastMessage('Data Refresh');
     } catch (e) {
+
       Utils.toastMessage('Error Occurs While Refreshing States');
     }
   }

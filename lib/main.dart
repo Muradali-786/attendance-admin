@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    DashBoardController().storeDepartmentStatsInAdmin();
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<TeacherController>(

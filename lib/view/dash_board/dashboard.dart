@@ -1,18 +1,32 @@
 import 'package:attendance_admin/constant/app_style/app_colors.dart';
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import '../../responsive.dart';
+import '../../view_model/dash_board/dash_board_controller.dart';
 import 'dashboard_component/counts_file.dart';
 import 'dashboard_component/graph_charts_statistic.dart';
 
-class DashboardScreen extends StatelessWidget {
+class DashboardScreen extends StatefulWidget {
   static const String id = '\dashboard';
-  const DashboardScreen({
-    Key? key,
-  }) : super(key: key);
+  const DashboardScreen({super.key});
+
+  @override
+  State<DashboardScreen> createState() => _DashboardScreenState();
+}
+
+class _DashboardScreenState extends State<DashboardScreen> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    DashBoardController().storeDepartmentStatsInAdmin();
+  }
 
   @override
   Widget build(BuildContext context) {
+
+
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),

@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+
 
 import '../../constant/app_style/app_styles.dart';
 import '../../model/attendance_model.dart';
@@ -13,7 +13,7 @@ class AttendanceController extends ChangeNotifier {
   final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
 
   DateTime startOfDay =
-      DateTime(currentDate.year, currentDate.month, currentDate.day);
+      DateTime(currentDate.year, currentDate.month, currentDate.day,0,0,0);
   DateTime endOfDay = DateTime(
       currentDate.year, currentDate.month, currentDate.day, 23, 59, 59);
 
