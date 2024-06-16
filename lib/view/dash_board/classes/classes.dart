@@ -57,10 +57,11 @@ class _ClassesScreenState extends State<ClassesScreen> {
               ],
             ),
             Container(
-              height: 40,
-              width: 150,
+              height: 35,
+              width: 400,
+              alignment: Alignment.topCenter,
               decoration: BoxDecoration(
-                  border: Border.all(color: AppColor.kPrimaryColor)),
+                  border: Border.all(color: AppColor.kGrey)),
               child: Row(
                 children: [
                   Expanded(
@@ -76,6 +77,7 @@ class _ClassesScreenState extends State<ClassesScreen> {
                 ],
               ),
             ),
+            const SizedBox(height: 14),
 
 
             FutureBuilder<QuerySnapshot>(

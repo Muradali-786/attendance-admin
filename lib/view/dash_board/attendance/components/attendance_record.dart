@@ -20,6 +20,7 @@ import '../../../../utils/utils.dart';
 import '../../../../view_model/attendance/attendance_controller.dart';
 import '../../classes/import/import_dialog_box.dart';
 import '../../classes/update/updae_class_dialog.dart';
+import 'package:intl/intl.dart';
 
 class AttendanceRecord extends StatefulWidget {
   const AttendanceRecord({super.key});
@@ -95,11 +96,8 @@ class _AttendanceRecordState extends State<AttendanceRecord> {
 
     return Column(
       children: [
-        Container(
-          height: 40,
-          width: double.infinity,
-          decoration:
-              BoxDecoration(border: Border.all(color: AppColor.kPrimaryColor)),
+        SizedBox(
+          height: 35,
           child: Row(
             children: [
               Expanded(
@@ -137,6 +135,7 @@ class _AttendanceRecordState extends State<AttendanceRecord> {
                     },
                     subjectId: onSubjectSelect.toString()),
               ),
+              const SizedBox(width: 8),
               _saveAttendanceButton(currentTime),
               const SizedBox(width: 8),
               _delAttendanceButton(currentTime),
@@ -275,40 +274,101 @@ class _AttendanceRecordState extends State<AttendanceRecord> {
 
               return Consumer<AttendanceController>(
                   builder: (context, provider, child) {
-                return ListView.builder(
-                    itemCount: studentStatuses.length,
-                    shrinkWrap: true,
-                    itemBuilder: (context, index) {
-                      return Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(index.toString()),
-                          Text(studentStatuses[index].studentName),
-                          Text(studentStatuses[index].studentName),
-                          const SizedBox(
-                            width: 20,
-                          ),
-                          CustomStatusChangerButton(
-                            attendanceStatus: attendanceList[
-                                studentStatuses[index].studentId.toString()],
-                            onTap: () {
-                              if (!isChange) {
-                                provider.setStatusMap(attendanceList);
-                                isChange = true;
-                              }
-
-                              provider.updateStatusListBasedOnKey(
-                                studentStatuses[index].studentId!,
-                              );
+                List<DataRow> dataRows = List<DataRow>.generate(
+                  studentStatuses.length,
+                  (index) => DataRow(
+                    cells: [
+                      _dataCellText("${index + 1}"),
+                      _dataCellText(studentStatuses[index].studentRollNo),
+                      _dataCellText(studentStatuses[index].studentName),
+                      DataCell(
+                        Tooltip(
+                          message: 'Click the button to Change the date',
+                          child: TextButton(
+                            onPressed: () {
+                              _selectDate(context);
                             },
+                            child: Text(
+                              dateChange
+                                  ? _formatDate(currentDate)
+                                  : _formatDate(_previousDate!.toDate()),
+                              style: AppStyles().defaultStyle(
+                                18,
+                                AppColor.kPrimaryColor,
+                                FontWeight.w400,
+                              ),
+                            ),
                           ),
-                        ],
-                      );
-                    });
+                        ),
+                      ),
+                      DataCell(
+                        Tooltip(
+                          message: 'Click the button to Change time',
+                          child: TextButton(
+                            onPressed: () {
+                              _selectTime(context);
+                            },
+                            child: Text(
+                              currentTime.toString(),
+                              style: AppStyles().defaultStyle(
+                                18,
+                                AppColor.kPrimaryColor,
+                                FontWeight.w400,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      DataCell(
+                        CustomStatusChangerButton(
+                          attendanceStatus: attendanceList[
+                              studentStatuses[index].studentId.toString()],
+                          onTap: () {
+                            if (!isChange) {
+                              provider.setStatusMap(attendanceList);
+                              isChange = true;
+                            }
+                            provider.updateStatusListBasedOnKey(
+                              studentStatuses[index].studentId!,
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+
+                return SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: DataTable(
+                      showCheckboxColumn: true,
+                      headingRowColor: MaterialStateColor.resolveWith(
+                        (states) => AppColor.kSecondaryColor,
+                      ),
+                      dataRowColor: MaterialStateColor.resolveWith(
+                        (states) => AppColor.kWhite,
+                      ),
+                      dividerThickness: 2.0,
+                      border: TableBorder.all(color: AppColor.kGrey, width: 2),
+                      columns: [
+                        _dataColumnText('S.No'),
+                        _dataColumnText('Roll No'),
+                        _dataColumnText('Name'),
+                        _dataColumnText('current Date'),
+                        _dataColumnText('current Time'),
+                        _dataColumnText('Status'),
+                      ],
+                      rows: dataRows,
+                    ),
+                  ),
+                );
               });
             }
           },
         )
+
       ],
     );
   }
@@ -316,8 +376,8 @@ class _AttendanceRecordState extends State<AttendanceRecord> {
   Widget _saveAttendanceButton(currentTime) {
     return Consumer<AttendanceController>(builder: (context, provider, child) {
       return CustomRoundButton(
-        height: 40,
-        title: 'UPDATE ATTENDANCE',
+        height: 35,
+        title: 'UPDATE',
         loading: provider.loading,
         onPress: () async {
           if (isChange && stdIdList.isNotEmpty && onAttendSelect != null) {
@@ -345,10 +405,15 @@ class _AttendanceRecordState extends State<AttendanceRecord> {
     });
   }
 
+  String _formatDate(DateTime dateTime) {
+    final formatter = DateFormat('yMMMMd');
+    return formatter.format(dateTime);
+  }
+
   Widget _delAttendanceButton(currentTime) {
     return CustomRoundButton(
-      height: 40,
-      title: 'DELETE ATTENDANCE',
+      height: 35,
+      title: 'DELETE',
       onPress: () async {
         if (onAttendSelect != null) {
           showDeleteAttendanceConfirmationDialog(

@@ -56,11 +56,9 @@ class _StudentScreenState extends State<StudentScreen> {
                     )),
               ],
             ),
-            Container(
-              height: 40,
+           SizedBox(
+              height: 35,
               width: double.infinity,
-              decoration: BoxDecoration(
-                  border: Border.all(color: AppColor.kPrimaryColor)),
               child: Row(
                 children: [
                   Expanded(

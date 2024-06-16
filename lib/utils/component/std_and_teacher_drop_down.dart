@@ -23,9 +23,10 @@ class TeacherDropdown extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 40,
+      height: 35,
+
       decoration: BoxDecoration(
-        border: Border.all(color: AppColor.kPrimaryColor),
+        border: Border.all(color: AppColor.kGrey),
       ),
       child: FutureBuilder<QuerySnapshot>(
         future: TeacherController().getTeacherData(),
@@ -55,7 +56,7 @@ class TeacherDropdown extends StatelessWidget {
               onChanged: onChanged,
               value: value,
               hint: Text('Select a Teacher',
-                  style: TextStyle(color: AppColor.kBlack)),
+                  style: TextStyle(color: AppColor.kTextGreyColor)),
               isExpanded: true,
               style: TextStyle(
                   color: AppColor.kPrimaryColor, fontWeight: FontWeight.w700),
@@ -82,9 +83,9 @@ class SubjectDropdown extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 40,
+      height: 45,
       decoration: BoxDecoration(
-        border: Border.all(color: AppColor.kPrimaryColor),
+        border: Border.all(color: AppColor.kGrey),
       ),
       child: StreamBuilder<QuerySnapshot>(
         stream: ClassController().streamClassesDataByTeacherId(teacherId),
@@ -163,9 +164,9 @@ class AttendanceDatesDropdown extends StatelessWidget {
       return formatter.format(dateTime);
     }
     return Container(
-      height: 40,
+      height: 35,
       decoration: BoxDecoration(
-        border: Border.all(color: AppColor.kPrimaryColor),
+        border: Border.all(color: AppColor.kGrey),
       ),
       child: FutureBuilder<QuerySnapshot>(
         future: AttendanceController().fetchAllAttendanceRecord(subjectId),

@@ -70,11 +70,8 @@ class _TakeAttendanceState extends State<TakeAttendance> {
 
     return Column(
       children: [
-        Container(
-          height: 40,
-          width: double.infinity,
-          decoration:
-          BoxDecoration(border: Border.all(color: AppColor.kPrimaryColor)),
+        SizedBox(
+          height: 35,
           child: Row(
             children: [
               Expanded(
@@ -132,10 +129,10 @@ class _TakeAttendanceState extends State<TakeAttendance> {
                   DataTable(
                     showCheckboxColumn: true,
                     headingRowColor: MaterialStateColor.resolveWith(
-                          (states) => AppColor.kSecondaryColor,
+                      (states) => AppColor.kSecondaryColor,
                     ),
                     dataRowColor: MaterialStateColor.resolveWith(
-                            (states) => AppColor.kWhite),
+                        (states) => AppColor.kWhite),
                     dividerThickness: 2.0,
                     border: TableBorder.all(color: AppColor.kGrey, width: 2),
                     columns: [
@@ -219,90 +216,90 @@ class _TakeAttendanceState extends State<TakeAttendance> {
 
               return Consumer<AttendanceController>(
                   builder: (context, provider, child) {
-                    if (provider.attendanceStatus.length != snap.length) {
-                      provider.attendanceStatusProvider(snap.length);
-                    }
-                    if (stdIdList.length != snap.length) {
-                      for (var std in snap) {
-                        stdIdList.add(std.studentId!);
-                      }
-                    }
-                    return SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: DataTable(
-                        showCheckboxColumn: true,
-                        headingRowColor: MaterialStateColor.resolveWith(
-                              (states) => AppColor.kSecondaryColor,
-                        ),
-                        dataRowColor: MaterialStateColor.resolveWith(
-                                (states) => AppColor.kWhite),
-                        dividerThickness: 2.0,
-                        border: TableBorder.all(color: AppColor.kGrey, width: 2),
-                        columns: [
-                          _dataColumnText('S.No'),
-                          _dataColumnText('Roll No'),
-                          _dataColumnText('Name'),
-                          _dataColumnText('current Date'),
-                          _dataColumnText('current Time'),
-                          _dataColumnText('Status'),
-                        ],
-                        rows: List.generate(
-                          snap.length,
-                              (index) {
-                            return DataRow(
-                              cells: [
-                                _dataCellText("${index + 1}"),
-                                _dataCellText(snap[index].studentRollNo),
-                                _dataCellText(snap[index].studentName),
-                                DataCell(Tooltip(
-                                  message: 'Click the button to Change the date',
-                                  child: TextButton(
-                                    onPressed: () {
-                                      _selectDate(context);
-                                    },
-                                    child: Text(
-                                      formatDate(date),
-                                      style: AppStyles().defaultStyle(
-                                        18,
-                                        AppColor.kPrimaryColor,
-                                        FontWeight.w400,
-                                      ),
-                                    ),
+                if (provider.attendanceStatus.length != snap.length) {
+                  provider.attendanceStatusProvider(snap.length);
+                }
+                if (stdIdList.length != snap.length) {
+                  for (var std in snap) {
+                    stdIdList.add(std.studentId!);
+                  }
+                }
+                return SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: DataTable(
+                    showCheckboxColumn: true,
+                    headingRowColor: MaterialStateColor.resolveWith(
+                      (states) => AppColor.kSecondaryColor,
+                    ),
+                    dataRowColor: MaterialStateColor.resolveWith(
+                        (states) => AppColor.kWhite),
+                    dividerThickness: 2.0,
+                    border: TableBorder.all(color: AppColor.kGrey, width: 2),
+                    columns: [
+                      _dataColumnText('S.No'),
+                      _dataColumnText('Roll No'),
+                      _dataColumnText('Name'),
+                      _dataColumnText('current Date'),
+                      _dataColumnText('current Time'),
+                      _dataColumnText('Status'),
+                    ],
+                    rows: List.generate(
+                      snap.length,
+                      (index) {
+                        return DataRow(
+                          cells: [
+                            _dataCellText("${index + 1}"),
+                            _dataCellText(snap[index].studentRollNo),
+                            _dataCellText(snap[index].studentName),
+                            DataCell(Tooltip(
+                              message: 'Click the button to Change the date',
+                              child: TextButton(
+                                onPressed: () {
+                                  _selectDate(context);
+                                },
+                                child: Text(
+                                  formatDate(date),
+                                  style: AppStyles().defaultStyle(
+                                    18,
+                                    AppColor.kPrimaryColor,
+                                    FontWeight.w400,
                                   ),
-                                )),
-                                DataCell(Tooltip(
-                                  message: 'Click the button to Change time',
-                                  child: TextButton(
-                                    onPressed: () {
-                                      _selectTime(context);
-                                    },
-                                    child: Text(
-                                      currentTime.toString(),
-                                      style: AppStyles().defaultStyle(
-                                        18,
-                                        AppColor.kPrimaryColor,
-                                        FontWeight.w400,
-                                      ),
-                                    ),
+                                ),
+                              ),
+                            )),
+                            DataCell(Tooltip(
+                              message: 'Click the button to Change time',
+                              child: TextButton(
+                                onPressed: () {
+                                  _selectTime(context);
+                                },
+                                child: Text(
+                                  currentTime.toString(),
+                                  style: AppStyles().defaultStyle(
+                                    18,
+                                    AppColor.kPrimaryColor,
+                                    FontWeight.w400,
                                   ),
-                                )),
-                                DataCell(
-                                    CustomStatusChangerButton(
-                                      attendanceStatus:
+                                ),
+                              ),
+                            )),
+                            DataCell(
+                                CustomStatusChangerButton(
+                                  attendanceStatus:
                                       provider.attendanceStatus[index],
-                                      onTap: () {
-                                        provider.updateStatusList(index);
-                                      },
-                                    ), onTap: () {
-                                  provider.updateStatusList(index);
-                                })
-                              ],
-                            );
-                          },
-                        ),
-                      ),
-                    );
-                  });
+                                  onTap: () {
+                                    provider.updateStatusList(index);
+                                  },
+                                ), onTap: () {
+                              provider.updateStatusList(index);
+                            })
+                          ],
+                        );
+                      },
+                    ),
+                  ),
+                );
+              });
             }
           },
         ),

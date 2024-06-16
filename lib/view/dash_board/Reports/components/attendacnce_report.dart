@@ -40,11 +40,9 @@ class _AttendanceReportState extends State<AttendanceReport> {
     return SingleChildScrollView(
       child: Column(
         children: [
-          Container(
-            height: 40,
+          SizedBox(
+            height: 35,
             width: double.infinity,
-            decoration: BoxDecoration(
-                border: Border.all(color: AppColor.kPrimaryColor)),
             child: Row(
               children: [
                 Expanded(
@@ -70,6 +68,7 @@ class _AttendanceReportState extends State<AttendanceReport> {
                     teacherId: onTeacherSelect.toString(),
                   ),
                 ),
+                const SizedBox(width: 10),
                 _saveAttendanceButton(),
               ],
             ),
@@ -258,13 +257,13 @@ class _AttendanceReportState extends State<AttendanceReport> {
   Widget _saveAttendanceButton() {
     return Consumer<MediaServices>(builder: (context, provider, _) {
       return CustomRoundButton(
-        height: 40,
-        title: 'EXPORT ATTENDANCE',
+        height: 35,
+        title: 'EXPORT',
         loading: provider.loading,
         onPress: () async {
           if (onSubjectSelect != null) {
             await provider.exportAndShareAttendanceSheet(onSubjectSelect!);
-            print('kitna aya');
+
           } else {
             Utils.toastMessage('Please select Any subject');
           }

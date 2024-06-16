@@ -49,12 +49,6 @@ class _SideMenuState extends State<SideMenu> {
         });
 
         break;
-      case SettingScreen.id:
-        setState(() {
-          _selectedScreen = SettingScreen();
-        });
-
-        break;
 
       case Reports.id:
         setState(() {
@@ -131,11 +125,6 @@ class _SideMenuState extends State<SideMenu> {
             route: Reports.id,
           ),
 
-          AdminMenuItem(
-            title: 'Setting',
-            icon: Icons.settings,
-            route: SettingScreen.id,
-          ),
         ],
         selectedRoute: DashboardScreen.id,
         onSelected: (item) {

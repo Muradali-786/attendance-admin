@@ -2,6 +2,7 @@ import 'package:attendance_admin/utils/component/custom_button.dart';
 import 'package:attendance_admin/utils/component/dialog_text_field.dart';
 import 'package:attendance_admin/utils/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import '../../../../constant/app_style/app_colors.dart';
 import '../../../../constant/app_style/app_styles.dart';
 import '../../../../model/single_std_info_model.dart';
@@ -27,8 +28,8 @@ class _StudentReportState extends State<StudentReport> {
         Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Expanded(
-              flex: 3,
+            SizedBox(
+              width: 300,
               child: DialogInputTextField(
                 myController: searchController,
                 focusNode: searchFocus,
@@ -39,42 +40,50 @@ class _StudentReportState extends State<StudentReport> {
                 keyBoardType: TextInputType.text,
               ),
             ),
-            Expanded(
-              child: CustomRoundButton(
-                  height: 45,
-                  title: 'Search',
-                  onPress: () {
+            const SizedBox(width: 15),
+            CustomRoundButton(
+                height: 35,
+                title: 'Search',
+                onPress: () {
 
-                    if(searchController.text.isNotEmpty && searchController.text.trim()!=name ){
-
-                      setState(() {
-                        name=searchController.text.trim();
-                      });
-                    }else{
-                      Utils.toastMessage('Record already displayed.');
-                      Utils.toastMessage('Please change the Roll No to display new data.');
-
-                    }
-                  },
-                  buttonColor: AppColor.kPrimaryColor),
-            )
+                  if (searchController.text.isNotEmpty &&
+                      searchController.text.trim() != name) {
+                    EasyLoading.showInfo('Please Wait...',duration: const Duration(seconds: 2));
+                    setState(() {
+                      name = searchController.text.trim();
+                    });
+                  } else {
+                    Utils.toastMessage('Record already displayed.');
+                    Utils.toastMessage(
+                        'Please change the Roll No to display new data.');
+                  }
+                },
+                buttonColor: AppColor.kPrimaryColor)
           ],
         ),
+        const SizedBox(height: 15),
         FutureBuilder<List<OneStudentInfoModel>>(
           future: StudentController().getStudentsDetailsInAllSubject(name),
           builder: (BuildContext context,
               AsyncSnapshot<List<OneStudentInfoModel>> snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Align(
-                alignment: Alignment.bottomCenter,
 
+            if (snapshot.connectionState == ConnectionState.waiting) {
+
+              return const Align(
+                  alignment: Alignment.bottomCenter,
                   child: CircularProgressIndicator());
             } else if (snapshot.hasError) {
+
               return Text('Error: ${snapshot.error}');
-            } else {
+            }else if (!snapshot.hasData) {
+
+              return Text('Error: ${snapshot.error}');
+            }
+            else {
+              EasyLoading.dismiss();
               return Column(
                 children: [
-                  Text('Student Information',style: kSubHead),
+                  Text('Student Information', style: kSubHead),
                   DataTable(
                     showCheckboxColumn: true,
                     headingRowColor: MaterialStateColor.resolveWith(
